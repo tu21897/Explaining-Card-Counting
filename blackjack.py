@@ -1,5 +1,6 @@
 import random as r
-
+import time
+import numpy as np
 
 EXCLUDE = []
 DAS = True
@@ -8,9 +9,91 @@ NUM_DECKS = 8
 SHUFFLE_AFTER = 4
 NUM_NORM_CARDS = 4
 
+SURR_SOL =  np.array([[0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0]])
+
+HARD_SOL =  np.array([[1,1,1,1,1,1,1,1,1,1],
+                    [1,2,2,2,2,1,1,1,1,1],
+                    [2,2,2,2,2,2,2,2,1,1],
+                    [2,2,2,2,2,2,2,2,2,2],
+                    [1,1,0,0,0,1,1,1,1,1],
+                    [0,0,0,0,0,1,1,1,1,1],
+                    [0,0,0,0,0,1,1,1,1,1],
+                    [0,0,0,0,0,1,1,1,1,1],
+                    [0,0,0,0,0,1,1,1,1,1],
+                    [0,0,0,0,0,0,0,0,0,0]])
+
+SOFT_SOL =  np.array([[1,1,1,2,2,1,1,1,1,1],
+                    [1,1,1,2,2,1,1,1,1,1],
+                    [1,1,2,2,2,1,1,1,1,1],
+                    [1,1,2,2,2,1,1,1,1,1],
+                    [1,2,2,2,2,1,1,1,1,1],
+                    [2,2,2,2,2,0,0,1,1,1],
+                    [0,0,0,0,2,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0]])
+
+PAIR_SOL =  np.array([[0,0,3,3,3,3,0,0,0,0],
+                    [0,0,3,3,3,3,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,3,3,3,3,0,0,0,0,0],
+                    [3,3,3,3,3,3,0,0,0,0],
+                    [3,3,3,3,3,3,3,3,3,3],
+                    [3,3,3,3,3,0,3,3,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [3,3,3,3,3,3,3,3,3,3]])
+
+
 def main():
     intro_options()
-    play_game()
+    while (True):
+        time.sleep(1) 
+        play_game()
+
+def optimal_solution(pv1, pv2, dv): 
+    # 0 = Stand
+    # 1 = Hit
+    # 2 = Double Down
+    # 3 = Split
+    # 4 = SURRender
+    
+    if (SURR):
+        SURR_SOL[0][8] = 4
+        for i in range(7,10):
+            SURR_SOL[1][i] = 4
+
+    pv = pv1 + pv2
+
+    if (SURR and not(pv1 == pv2) and (pv == 16 or pv == 15) 
+            and (dv == 9 or dv == 10 or (dv == 11 and pv == 16))):
+        if (pv == 16):
+            return SURR_SOL[1][dv -2]
+        else:
+            return SURR_SOL[0][8]
+    else:
+        if (pv1 == 10 and pv2 == 10):
+            return 0
+        if (not(pv2 == 11 and pv1 == 11) and not(pv1 == pv2)):
+            if (pv < 9):
+                return 1
+            elif (pv > 17):
+                return 0
+            return HARD_SOL[pv - 8][dv-2]
+
+        if (not(pv1 == pv2) and (pv1 == 11 or pv2 == 11) and not(pv == 21)):
+            return SOFT_SOL[pv-13][dv-2]
+
+        if (DAS):
+            PAIR_SOL[4][0] = 3
+            for i in range(3,5):
+                PAIR_SOL[4][i] = 3
+            for i in range(0,2):
+                PAIR_SOL[1][i] = 3
+            for i in range(0,2):
+                PAIR_SOL[0][i] = 3
+        if (not(PAIR_SOL[pv1 - 2][dv - 2] == 3)):
+            return optimal_solution(pv, 0, dv)
+        return PAIR_SOL[pv1 - 2][dv - 2]
 
 def play_game():
     pVals = {0:[(0,[hit()])]}
@@ -24,7 +107,7 @@ def play_game():
         decision = ""
         if (decision == ""):
             prompt(gameState, currHand, splitable)
-        while (not(decision == '0' or decision == '2' or decision == '4' or (decision == '1' and currHand[0]>0 and currHand[1][0] == 11))):
+        while (not(decision == '0' or decision == '2' or decision == '4' or (decision == '1' and currHand[0]>0 and currHand[1][0] == 11) or sum(currHand[1]) > 21)):
             dec_args = ["str(input())",
                         "not(checked_input == '0' or checked_input == '1' or checked_input == '2' or checked_input == '3' or checked_input == '4')",
                         "print('    Invalid Input, Choose Decision: ', end='')"]
@@ -33,7 +116,7 @@ def play_game():
             if (not(decision == '0' or decision == '4')):
                 currHand = gameState.pop_hand()
                 splitable = len(currHand[1]) == 2 and currHand[1][0] == currHand[1][1]
-            if (not(decision == '0' or decision == '2' or decision == '4' or (decision == '1' and currHand[0]>0 and currHand[1][0] == 11))):
+            if (not(decision == '0' or decision == '2' or decision == '4' or (decision == '1' and currHand[0]>0 and currHand[1][0] == 11) or sum(currHand[1]) > 21)):
                 prompt(gameState, currHand, splitable)
     while (sum(gameState.dHand) < 17):
         gameState.dHand.append(hit())
@@ -102,7 +185,7 @@ def prompt(gameState, currHand, splitable):
 
 def hit():
     global EXCLUDE
-    if (len(EXCLUDE) > SHUFFLE_AFTER):
+    if (len(EXCLUDE) > NUM_NORM_CARDS * SHUFFLE_AFTER * 13 + 1):
         EXCLUDE = []
     num = r.randint(1, NUM_NORM_CARDS * NUM_DECKS * 13 + 1)
     EXCLUDE.append(num)
@@ -242,15 +325,24 @@ def evaluate_game_state(gameState, dTot):
     print("    Results")
     print("__________________________________________________________________________\n")
     i = 1
+    dealerHand = ""
+    for card in gameState.dHand:
+        dealerHand += to_string(card) + "  "
+    print("\n    Dealer Hand: ", dealerHand[:len(dealerHand)-2])
     for k in gameState.pHands:
         for pHand in gameState.pHands[k]:
             handTotal = sum(pHand[1])
-            if (handTotal > dTot):
-                print("\n    Hand", i, ": Win")
+            handStr = ""
+            for card in pHand[1]:
+                handStr += to_string(card) + "  "
+            if (handTotal > 21):
+                print("\n    Hand", i,"(", handStr[:len(handStr)-2],"): Bust")
+            elif (handTotal > dTot or dTot > 21):
+                print("\n    Hand", i,"(", handStr[:len(handStr)-2],"): Win")
             elif (handTotal == dTot):
-                print("\n    Hand", i, ": Push")
+                print("\n    Hand", i,"(", handStr[:len(handStr)-2],"): Push")
             else:
-                print("\n    Hand", i, ": Loss")
+                print("\n    Hand", i,"(", handStr[:len(handStr)-2],"): Loss")
             i += 1
     print("\n__________________________________________________________________________\n")
     print("\n"*10)
