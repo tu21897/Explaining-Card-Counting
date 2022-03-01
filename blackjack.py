@@ -1,14 +1,20 @@
 from pickle import GLOBAL
+from posixpath import split
 import random as r
 import time
 import numpy as np
 
 EXCLUDE = []
-NUM_DECKS = 8
-SHUFFLE_AFTER = 6
+NUM_DECKS = 6
+SHUFFLE_AFTER = 5
 NUM_NORM_CARDS = 4
+MAX_SPLIT = 3
 
 HARD_SOL =  np.array([[1,1,1,1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1,1,1,1],
                     [1,2,2,2,2,1,1,1,1,1],
                     [2,2,2,2,2,2,2,2,1,1],
                     [2,2,2,2,2,2,2,2,2,2],
@@ -17,6 +23,10 @@ HARD_SOL =  np.array([[1,1,1,1,1,1,1,1,1,1],
                     [0,0,0,0,0,1,1,1,1,1],
                     [0,0,0,0,0,1,1,1,1,1],
                     [0,0,0,0,0,1,1,1,1,1],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,0,0,0,0]])
 
 SOFT_SOL =  np.array([[1,1,1,2,2,1,1,1,1,1],
@@ -42,41 +52,54 @@ PAIR_SOL =  np.array([[3,3,3,3,3,3,0,0,0,0],
 WINS = 0.0
 LOSSES = 0.0
 PUSHES = 0.0
-GAMES = 0.0
 
 def main():
+    global WINS
+    global LOSSES
+    global PUSHES
     i = 1
-    while (i <= 1000):
-        print("----------------------- Game", i, "-----------------------")
-        play_game()
-        i += 1
-    print("Wins :", WINS)
-    print("Losses :", LOSSES)
-    print("Pushes :", PUSHES)
-    print("# Games in terms of bets :", GAMES)
-    print("Winrate :", WINS/(WINS+ LOSSES) * 100.0, "%")
+    j = 1
+    while (j <= 10):
+        print("Set: ", j)
+        while (i <= 100000):
+            # print("----------------------- Game", i, "-----------------------")
+            play_game()
+            i += 1
+        i = 0
+        print("Wins :", WINS)
+        print("Losses :", LOSSES)
+        print("Pushes :", PUSHES)
+        print("Winrate :", (WINS+PUSHES/2.0)/(WINS+LOSSES+PUSHES) * 100.0, "%")
+        j += 1
+        WINS = 0.0
+        LOSSES = 0.0
+        PUSHES = 0.0
 
-def basic_strategy(pv1, pv2, dv): 
+def basic_strategy(currHand, dv): 
     # 0 = Stand
     # 1 = Hit
     # 2 = Double Down
     # 3 = Split
 
-    pv = pv1 + pv2
+    numCards = len(currHand.hand)
+    hVal = sum(currHand.hand)
 
-    if (pv1 == 10 and pv2 == 10):
-        return 0
-    if (not(pv2 == 11 and pv1 == 11) and not(pv1 == pv2)):
-        if (pv < 9):
-            return 1
-        elif (pv > 17):
-            return 0
-        return HARD_SOL[pv - 8][dv-2]
-    if (not(pv1 == pv2) and (pv1 == 11 or pv2 == 11) and not(pv == 21)):
-        return SOFT_SOL[pv-13][dv-2]
-    if (not(PAIR_SOL[pv1 - 2][dv - 2] == 3)):
-        return basic_strategy(pv, 0, dv)
-    return PAIR_SOL[pv1 - 2][dv - 2]
+    if (currHand.splitnum >= 1 and currHand.splitnum < MAX_SPLIT): # Already split
+        if (numCards == 1): # Can't split, can double down
+            return HARD_SOL[hVal - 4][dv-2]
+        elif (numCards == 2 and currHand.hand[0] == currHand.hand[1]): # Can split, can't double down
+            if (PAIR_SOL[currHand.hand[0] - 2][dv - 2] == 3): # Recommended split
+                return PAIR_SOL[currHand.hand[0] - 2][dv - 2]
+            else: # Recommended hit/stand no double down
+                return np.where(HARD_SOL == 2, 1, HARD_SOL)[hVal - 4][dv-2]
+        elif (not(hVal > 17 or hVal < 8)): # Can't split, can't double down
+            return np.where(HARD_SOL == 2, 1, HARD_SOL)[hVal - 4][dv-2]
+        else:
+            return HARD_SOL[hVal - 4][dv-2]
+    elif (numCards == 2 and currHand.splitnum == 0 and currHand.hand[0] == currHand.hand[1] and PAIR_SOL[currHand.hand[0] - 2][dv - 2] == 3):
+        return PAIR_SOL[currHand.hand[0] - 2][dv - 2]
+    else: # Can't split, can't double down
+        return HARD_SOL[hVal - 4][dv-2]
 
 def play_game():
     pVals = [Hand(0, 1.0, [hit()])]
@@ -88,13 +111,12 @@ def play_game():
         currHand = gameState.pop_hand()
         decision = -1
         while (not(decision == 0 or decision == 2)):
-            if (len(currHand.hand) > 2 or len(currHand.hand) == 1 or currHand.splitnum > 2):
-                decision = basic_strategy(sum(currHand.hand), 0, gameState.dHand[0])
-            else:
-                decision = basic_strategy(currHand.hand[0], currHand.hand[1], gameState.dHand[0])
+            decision = basic_strategy(currHand, gameState.dHand[0])
             update_game_state(gameState, currHand, decision)
-            if (not(decision == 0 or decision == 2)):
+            if (decision == 3 or decision == 1):
                 currHand = gameState.pop_hand()
+            if (sum(currHand.hand) > 21):
+                break
     dVal = sum(gameState.dHand)
     while (dVal < 17):
         gameState.dHand.append(hit())
@@ -102,7 +124,7 @@ def play_game():
         if (dVal > 21 and 11 in gameState.dHand):
             gameState.dHand[gameState.dHand.index(11)] = 1
             dVal = sum(gameState.dHand)
-    evaluate_game_state(gameState, dVal)
+    evaluate_game_state(gameState)
 
 def hit():
     global EXCLUDE
@@ -166,38 +188,34 @@ def update_game_state(currGameState, currHand, decision):
         currGameState.push_hand(sHand1)
         currGameState.push_hand(sHand2)
 
-def evaluate_game_state(gameState, dTot):
+def evaluate_game_state(gameState):
     global WINS
     global LOSSES
     global PUSHES
-    global GAMES
 
     i = 1
     dealerHand = ""
+    dTot = sum(gameState.dHand)
     for card in gameState.dHand:
         dealerHand += to_string(card) + "  "
-    print("\n    Dealer Hand: ", dealerHand[:len(dealerHand)-2])
+    #print("\n    Dealer Hand: ", dealerHand[:len(dealerHand)-2])
     for h in gameState.pHands:
         handTotal = sum(h.hand)
         handStr = ""
         for card in h.hand:
             handStr += to_string(card) + "  "
         if (handTotal > 21):
-            print("\n    ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Bust")
+            #print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Bust")
             LOSSES += h.betSize
-            GAMES += h.betSize
         elif (handTotal > dTot or dTot > 21):
-            print("\n    ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Win")
+            #print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Win")
             WINS += h.betSize
-            GAMES += h.betSize
         elif (handTotal == dTot):
-            print("\n    ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Push")
+            #print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Push")
             PUSHES += h.betSize
-            GAMES += h.betSize
         else:
-            print("\n    ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Loss")
+            #print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Loss")
             LOSSES += h.betSize
-            GAMES += h.betSize
         i += 1
 
 # pHands = [hand1, hand2, etc], player hands
