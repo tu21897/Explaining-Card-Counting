@@ -1,6 +1,6 @@
-from pickle import GLOBAL
 import random as r
 import numpy as np
+import pandas as pd
 
 EXCLUDE = []
 NUM_DECKS = 6
@@ -62,27 +62,43 @@ WINS = 0.0
 LOSSES = 0.0
 PUSHES = 0.0
 
+#
+# Data Columns
+# 
+# Session Id - INT, 
+# Number of games in session - INT, 
+# Avg Bet (x(Base)) - FLOAT, 
+# Session winrate (W/L x(Base)) - % FLOAT, 
+# Amount won (x(Base)) - FLOAT, 
+# Amount loss (x(Base)) - FLOAT, 
+# Amount push (x(Base)) - FLOAT
+#
 def main():
     global WINS
     global LOSSES
     global PUSHES
     i = 1
-    j = 1
-    while (j <= 1):
-        print("Set: ", j)
-        while (i <= 10000000):
-            # print("----------------------- Game", i, "-----------------------")
+    sessionid = 1
+    numsim = 10000
+    data = {'Session ID':[], 'Games Simulated in Session':[], 'Avg Bet (Xbase)':[], 'Session Winrate (W/L Xbase)': [], 'Amount won (Xbase)':[], 'Amount loss (Xbase)':[], 'Amount push (Xbase)':[]}
+    while (sessionid <= 10):
+        while (i <= numsim):
             play_game()
             i += 1
-        i = 0
-        print("Wins :", WINS)
-        print("Losses :", LOSSES)
-        print("Pushes :", PUSHES)
-        print("Winrate :", (WINS)/(WINS+LOSSES) * 100.0, "%")
-        j += 1
+        i = 1
+        data['Session ID'].append(sessionid)
+        data['Games Simulated in Session'].append(numsim)
+        data['Avg Bet (Xbase)'].append((WINS+LOSSES+PUSHES)/float(numsim))
+        data['Session Winrate (W/L Xbase)'].append((WINS)/(WINS+LOSSES) * 100.0)
+        data['Amount won (Xbase)'].append(WINS)
+        data['Amount loss (Xbase)'].append(LOSSES)
+        data['Amount push (Xbase)'].append(PUSHES)  
         WINS = 0.0
         LOSSES = 0.0
         PUSHES = 0.0
+        sessionid += 1
+    dataFrame = pd.DataFrame.from_dict(data)
+    dataFrame.to_csv('basic_strategy_data.csv', index=False)
 
 def basic_strategy(currHand, dv): 
     # 0 = Stand
