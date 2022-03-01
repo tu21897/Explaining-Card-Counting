@@ -65,13 +65,14 @@ PUSHES = 0.0
 #
 # Data Columns
 # 
-# Session Id - INT, 
-# Number of games in session - INT, 
-# Avg Bet (x(Base)) - FLOAT, 
-# Session winrate (W/L x(Base)) - % FLOAT, 
-# Amount won (x(Base)) - FLOAT, 
-# Amount loss (x(Base)) - FLOAT, 
-# Amount push (x(Base)) - FLOAT
+# Session Id - + INT, 
+# Number of games in session - + INT, 
+# Avg Bet (x(Base)) - + FLOAT, 
+# Session winrate (W/L x(Base)) - +% FLOAT, 
+# Amount won (x(Base)) - + FLOAT, 
+# Amount loss (x(Base)) - + FLOAT, 
+# Amount push (x(Base)) - + FLOAT,
+# Net Gain/Loss (x(Base)) - +/- FLOAT 
 #
 def main():
     global WINS
@@ -79,9 +80,10 @@ def main():
     global PUSHES
     i = 1
     sessionid = 1
+    totalSessions = 1000
     numsim = 10000
-    data = {'Session ID':[], 'Games Simulated in Session':[], 'Avg Bet (Xbase)':[], 'Session Winrate (W/L Xbase)': [], 'Amount won (Xbase)':[], 'Amount loss (Xbase)':[], 'Amount push (Xbase)':[]}
-    while (sessionid <= 1000):
+    data = {'Session ID':[], 'Games Simulated in Session':[], 'Avg Bet (Xbase)':[], 'Session Winrate (W/L Xbase)': [], 'Amount won (Xbase)':[], 'Amount loss (Xbase)':[], 'Amount push (Xbase)':[], 'Net Gain/Loss (Xbase)': []}
+    while (sessionid <= totalSessions):
         while (i <= numsim):
             play_game()
             i += 1
@@ -92,11 +94,13 @@ def main():
         data['Session Winrate (W/L Xbase)'].append((WINS)/(WINS+LOSSES) * 100.0)
         data['Amount won (Xbase)'].append(WINS)
         data['Amount loss (Xbase)'].append(LOSSES)
-        data['Amount push (Xbase)'].append(PUSHES)  
+        data['Amount push (Xbase)'].append(PUSHES)
+        data['Net Gain/Loss (Xbase)'].append(WINS - LOSSES)  
         WINS = 0.0
         LOSSES = 0.0
         PUSHES = 0.0
         sessionid += 1
+        print('Percent Done: ', round(float(sessionid)/float(totalSessions)* 100.00, 2), "%", end='\r', flush=True)
     dataFrame = pd.DataFrame.from_dict(data)
     dataFrame.to_csv('basic_strategy_data.csv', index=False)
 
