@@ -81,7 +81,7 @@ def main():
     sessionid = 1
     numsim = 10000
     data = {'Session ID':[], 'Games Simulated in Session':[], 'Avg Bet (Xbase)':[], 'Session Winrate (W/L Xbase)': [], 'Amount won (Xbase)':[], 'Amount loss (Xbase)':[], 'Amount push (Xbase)':[]}
-    while (sessionid <= 10):
+    while (sessionid <= 1000):
         while (i <= numsim):
             play_game()
             i += 1
