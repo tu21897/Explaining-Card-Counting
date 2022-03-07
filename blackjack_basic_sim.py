@@ -120,7 +120,7 @@ def main():
     global PUSHES
     i = 1
     sessionid = 1
-    totalSessions = 100
+    totalSessions = 10000
     numsim = 1000
     data = {'Session ID':[], 'Cumulative Games': [], 'Games Simulated in Session':[], 'Lifetime Avg Bet (Xbase)':[], 'Lifetime winrate (W/L x(Base))': [], 'Lifetime Amount won (Xbase)':[], 'Lifetime Amount loss (Xbase)':[], 'Lifetime Amount push (Xbase)':[], 'Lifetime Net Gain/Loss (Xbase)': [], 'Session Avg Bet (Xbase)':[], 'Session winrate (W/L x(Base))': [], 'Session Amount won (Xbase)':[], 'Session Amount loss (Xbase)':[], 'Session Amount push (Xbase)':[], 'Session Net Gain/Loss (Xbase)': []}
     while (sessionid <= totalSessions):
@@ -337,7 +337,7 @@ class Game_State:
                     LIFETIME_LOSSES += h.betSize
             elif (h.classifier == 'blackjack'):
                 WINS += h.betSize * 1.5
-                LIFETIME_WINS += h.betSize
+                LIFETIME_WINS += h.betSize * 1.5
             elif (handTotal == dTot):
                 if (handTotal > 21):
                     LOSSES += h.betSize
