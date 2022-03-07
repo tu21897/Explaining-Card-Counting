@@ -95,9 +95,12 @@ PAIR_SOL =        np.array([[3,3,3,3,3,3,0,0,0,0],
                             [3,3,3,3,3,0,3,3,0,0],
                             [0,0,0,0,0,0,0,0,0,0]])
 
-WINS = 0.0 # Wins (x(Base)) 
-LOSSES = 0.0 # Losses (x(Base)) 
-PUSHES = 0.0 # Pushes (x(Base)) 
+WINS = 0.0 # Session Wins (x(Base)) 
+LOSSES = 0.0 # Session Losses (x(Base)) 
+PUSHES = 0.0 # Session Pushes (x(Base)) 
+LIFETIME_WINS = 0.0 # Lifetime Wins (x(Base)) 
+LIFETIME_LOSSES = 0.0 # Lifetime Losses (x(Base)) 
+LIFETIME_PUSHES = 0.0 # Lifetime Pushes (x(Base)) 
 
 #
 # Data Columns
@@ -117,26 +120,33 @@ def main():
     global PUSHES
     i = 1
     sessionid = 1
-    totalSessions = 10
+    totalSessions = 100
     numsim = 1000
-    data = {'Session ID':[], 'Games Simulated in Session':[], 'Avg Bet (Xbase)':[], 'Lifetime winrate (W/L x(Base))': [], 'Amount won (Xbase)':[], 'Amount loss (Xbase)':[], 'Amount push (Xbase)':[], 'Lifetime Net Gain/Loss (Xbase)': []}
+    data = {'Session ID':[], 'Cumulative Games': [], 'Games Simulated in Session':[], 'Lifetime Avg Bet (Xbase)':[], 'Lifetime winrate (W/L x(Base))': [], 'Lifetime Amount won (Xbase)':[], 'Lifetime Amount loss (Xbase)':[], 'Lifetime Amount push (Xbase)':[], 'Lifetime Net Gain/Loss (Xbase)': [], 'Session Avg Bet (Xbase)':[], 'Session winrate (W/L x(Base))': [], 'Session Amount won (Xbase)':[], 'Session Amount loss (Xbase)':[], 'Session Amount push (Xbase)':[], 'Session Net Gain/Loss (Xbase)': []}
     while (sessionid <= totalSessions):
         while (i <= numsim):
             play_game()
             i += 1
         i = 1
         data['Session ID'].append(sessionid)
+        data['Cumulative Games'].append(sessionid * numsim)
         data['Games Simulated in Session'].append(numsim)
-        data['Avg Bet (Xbase)'].append((WINS+LOSSES+PUSHES)/float(numsim))
-        data['Lifetime winrate (W/L x(Base))'].append((WINS)/(WINS+LOSSES) * 100.0)
-        data['Amount won (Xbase)'].append(WINS)
-        data['Amount loss (Xbase)'].append(LOSSES)
-        data['Amount push (Xbase)'].append(PUSHES)
-        data['Lifetime Net Gain/Loss (Xbase)'].append(WINS - LOSSES)
+        data['Lifetime Avg Bet (Xbase)'].append(round((LIFETIME_WINS+LIFETIME_LOSSES+LIFETIME_PUSHES)/(float(numsim) * float(sessionid)), 3))
+        data['Lifetime winrate (W/L x(Base))'].append(round((LIFETIME_WINS)/(LIFETIME_WINS+LIFETIME_LOSSES) * 100.0, 3))
+        data['Lifetime Amount won (Xbase)'].append(LIFETIME_WINS)
+        data['Lifetime Amount loss (Xbase)'].append(LIFETIME_LOSSES)
+        data['Lifetime Amount push (Xbase)'].append(LIFETIME_PUSHES)
+        data['Lifetime Net Gain/Loss (Xbase)'].append(LIFETIME_WINS - LIFETIME_LOSSES)
+        data['Session Avg Bet (Xbase)'].append(round((WINS+LOSSES+PUSHES)/(float(numsim) * float(sessionid)), 3))
+        data['Session winrate (W/L x(Base))'].append(round((WINS)/(WINS+LOSSES) * 100.0, 3))
+        data['Session Amount won (Xbase)'].append(WINS)
+        data['Session Amount loss (Xbase)'].append(LOSSES)
+        data['Session Amount push (Xbase)'].append(PUSHES)
+        data['Session Net Gain/Loss (Xbase)'].append(WINS - LOSSES)
+        sessionid += 1
         WINS = 0.0
         LOSSES = 0.0
         PUSHES = 0.0
-        sessionid += 1
         print('Percent Done: ', round(float(sessionid)/float(totalSessions)* 100.00, 2), "%", end='\r', flush=True)
     dataFrame = pd.DataFrame.from_dict(data)
     dataFrame.to_csv('basic_strategy_data.csv', index=False)
@@ -312,25 +322,35 @@ class Game_State:
         global WINS
         global LOSSES
         global PUSHES
+        global LIFETIME_WINS
+        global LIFETIME_LOSSES
+        global LIFETIME_PUSHES
         for h in self.pHands:
             handTotal = sum(h.hand)
             dTot = sum(self.dHand)
             if (11 in self.dHand and 10 in self.dHand and len(self.dHand) == 2):
                 if (h.classifier == 'sadjack'):
                     PUSHES += h.betSize
+                    LIFETIME_PUSHES += h.betSize
                 else:
                     LOSSES += h.betSize
+                    LIFETIME_LOSSES += h.betSize
             elif (h.classifier == 'blackjack'):
                 WINS += h.betSize * 1.5
+                LIFETIME_WINS += h.betSize
             elif (handTotal == dTot):
                 if (handTotal > 21):
                     LOSSES += h.betSize
+                    LIFETIME_LOSSES += h.betSize
                 else:
                     PUSHES += h.betSize
+                    LIFETIME_PUSHES += h.betSize
             elif ((handTotal < 22 and handTotal > dTot and dTot < 22) or (handTotal < 22 and dTot > 21)):
                 WINS += h.betSize
+                LIFETIME_WINS += h.betSize
             else:
                 LOSSES += h.betSize
+                LIFETIME_LOSSES += h.betSize
 
     # Simulates the dealer's turn
     def dealer_draw(self):
