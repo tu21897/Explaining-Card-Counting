@@ -137,7 +137,7 @@ def main():
         data['Lifetime Amount loss (Xbase)'].append(LIFETIME_LOSSES)
         data['Lifetime Amount push (Xbase)'].append(LIFETIME_PUSHES)
         data['Lifetime Net Gain/Loss (Xbase)'].append(LIFETIME_WINS - LIFETIME_LOSSES)
-        data['Session Avg Bet (Xbase)'].append(round((WINS+LOSSES+PUSHES)/(float(numsim) * float(sessionid)), 3))
+        data['Session Avg Bet (Xbase)'].append(round((WINS+LOSSES+PUSHES)/(float(numsim)), 3))
         data['Session winrate (W/L x(Base))'].append(round((WINS)/(WINS+LOSSES) * 100.0, 3))
         data['Session Amount won (Xbase)'].append(WINS)
         data['Session Amount loss (Xbase)'].append(LOSSES)
