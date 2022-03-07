@@ -2,9 +2,9 @@
 #
 # ----------------------------------
 #
-# This file defines and simulates the game of Blackjack
-# the resulting data is converted to a dataframe and subsequently
-# stored as a created csv file.
+# This file defines and simulates the game of Blackjack using basic
+# strategy the resulting data is converted to a dataframe and 
+# subsequently stored as a created csv file.
 #
 
 # Imports
@@ -106,13 +106,20 @@ LIFETIME_PUSHES = 0.0 # Lifetime Pushes (x(Base))
 # Data Columns
 # 
 # Session Id - + INT, 
-# Number of games in session - + INT, 
-# Avg Bet (x(Base)) - + FLOAT, 
+# Cumulative Games - + INT
+# Games Simulated in Session - + INT, 
+# Lifetime Avg Bet (x(Base)) - + FLOAT, 
 # Lifetime winrate (W/L x(Base)) - +% FLOAT, 
-# Amount won (x(Base)) - + FLOAT, 
-# Amount loss (x(Base)) - + FLOAT, 
-# Amount push (x(Base)) - + FLOAT,
-# Net Gain/Loss (x(Base)) - +/- FLOAT 
+# Lifetime Amount won (x(Base)) - + FLOAT, 
+# Lifetime Amount loss (x(Base)) - + FLOAT, 
+# Lifetime Amount push (x(Base)) - + FLOAT,
+# Lifetime Net Gain/Loss (x(Base)) - +/- FLOAT
+# Session Avg Bet (x(Base)) - + FLOAT, 
+# Session winrate (W/L x(Base)) - +% FLOAT, 
+# Session Amount won (x(Base)) - + FLOAT, 
+# Session Amount loss (x(Base)) - + FLOAT, 
+# Session Amount push (x(Base)) - + FLOAT,
+# Session Net Gain/Loss (x(Base)) - +/- FLOAT 
 #
 def main():
     global WINS

@@ -1,60 +1,51 @@
+# blackjack_counting_sim.py - Tu Nguyen 2022
+#
+# ----------------------------------
+#
+# This file defines and simulates the game of Blackjack using counting
+# strategy the resulting data is converted to a dataframe and 
+# subsequently stored as a created csv file.
+#
+
+# Imports
 import random as r
+import math
+from matplotlib.pyplot import flag
 import numpy as np
 import pandas as pd
-import math
 
-EXCLUDE = []
-NUM_DECKS = 8
-SHUFFLE_AFTER = 7
-NUM_NORM_CARDS = 4
-MAX_SPLIT = 3
 
-# #                                                        2    3    4    5    6    7    8     9    10     J     Q     K     A
-# NAME_TO_COUNT_VECTOR = {'hi_lo'                     : [ 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                         'hi_opt1'                   : [ 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0,  0.0],
-#                         'hi_opt2'                   : [ 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0,  0.0],
-#                         'knock_out'                 : [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                         'omega2'                    : [ 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.0, -1.0, -2.0, -2.0, -2.0, -2.0,  0.0],
-#                         'ace_five'                  : [ 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
-#                         'zen_count'                 : [ 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-#                         'halves'                    : [ 0.5, 1.0, 1.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                         'kiss'                      : [ 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0,  0.0],
-#                         'wong_halves'               : [ 0.5, 1.0, 1.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                         'j_noir'                    : [-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,  1.0, -2.0, -2.0, -2.0, -2.0, -2.0],
-#                         'silver_fox'                : [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                         'unbalanced_zen2'           : [ 1.0, 2.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-#                         'revere_point_count'        : [ 1.0, 2.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -2.0],
-#                         'uston_advanced_point_count': [ 1.0, 2.0, 2.0, 3.0, 2.0, 2.0, 1.0, -1.0,  3.0,  3.0,  3.0, -3.0,  0.0],
-#                         'canfield_expert'           : [ 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0,  0.0]}
+##################### Settings #####################
+NUM_DECKS = 8 # Number of decks in shoe
+SHUFFLE_AFTER = 7 # Where the deck is cut to be reshuffled
+NUM_NORM_CARDS = 4 # Number of each card in a deck
+MAX_SPLIT = 3 # Maximum number of splits allowed
 
-# count system to corresponding index
-CSYS_NAME = ['hi_lo', 'hi_opt1', 'hi_opt2',
-             'knock_out', 'omega2', 'ace_five',
-             'zen_count', 'halves', 'wong_halves',
-             'j_noir', 'silver_fox', 'unbalanced_zen2',
-             'revere_point_count', 'revere_point_count',
-             'uston_advanced_point_count', 'canfield_expert'] 
 
-# card val for each system, [[2s],...,[As]], index = corresponding count system, rows = cval on each card 
-# based on system, columns = all cval for system
-CVAL_TRANSPOSE =   [[ 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.5, 0.0, 0.5,-2.0, 1.0, 1.0, 1.0, 1.0, 0.0],
-                    [ 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 1.0, 1.0, 2.0, 1.0, 2.0, 0.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 1.0, 1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 1.5, 1.0, 1.5, 1.0, 1.0, 2.0, 2.0, 3.0, 1.0],
-                    [ 1.0, 1.0, 1.0, 1.0, 2.0, 0.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.5, 0.0, 0.5, 1.0, 1.0, 1.0, 1.0, 2.0, 1.0],
-                    [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
-                    [ 0.0, 0.0, 0.0, 0.0,-1.0, 0.0, 0.0,-0.5, 0.0,-0.5, 1.0,-1.0, 0.0, 0.0,-1.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-1.0,-2.0,-2.0,-3.0,-1.0],
-                    [-1.0, 0.0, 0.0,-1.0, 0.0,-1.0,-1.0,-1.0, 0.0,-1.0,-2.0,-1.0,-1.0,-2.0, 0.0, 0.0]]
+EXCLUDE = [] # Cards Drawn
 
-# [RUN_C], index = corressponding count system, TRUE_C = RUN_C / REM_DECKS
-CSYS_RUN_C = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-
+# Solution given a hard hand without double down
 HARD_SOL =        np.array([[1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,0,0,0,1,1,1,1,1],
+                            [0,0,0,0,0,1,1,1,1,1],
+                            [0,0,0,0,0,1,1,1,1,1],
+                            [0,0,0,0,0,1,1,1,1,1],
+                            [0,0,0,0,0,1,1,1,1,1],
+                            [0,0,0,0,0,0,0,0,0,0],
+                            [0,0,0,0,0,0,0,0,0,0],
+                            [0,0,0,0,0,0,0,0,0,0],
+                            [0,0,0,0,0,0,0,0,0,0],
+                            [0,0,0,0,0,0,0,0,0,0]])
+
+# Solution given a hard hand with double down
+HARD_SOL_D =      np.array([[1,1,1,1,1,1,1,1,1,1],
                             [1,1,1,1,1,1,1,1,1,1],
                             [1,1,1,1,1,1,1,1,1,1],
                             [1,1,1,1,1,1,1,1,1,1],
@@ -73,7 +64,19 @@ HARD_SOL =        np.array([[1,1,1,1,1,1,1,1,1,1],
                             [0,0,0,0,0,0,0,0,0,0],
                             [0,0,0,0,0,0,0,0,0,0]])
 
-SOFT_SOL =        np.array([[1,1,1,2,2,1,1,1,1,1],
+# Solution given a soft hand without double down
+SOFT_SOL =        np.array([[1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1,1,1],
+                            [0,0,0,0,0,0,0,1,1,1],
+                            [0,0,0,0,0,0,0,0,0,0],
+                            [0,0,0,0,0,0,0,0,0,0],
+                            [0,0,0,0,0,0,0,0,0,0]])
+
+# Solution given a soft hand with double down
+SOFT_SOL_D =      np.array([[1,1,1,2,2,1,1,1,1,1],
                             [1,1,1,2,2,1,1,1,1,1],
                             [1,1,2,2,2,1,1,1,1,1],
                             [1,1,2,2,2,1,1,1,1,1],
@@ -83,16 +86,7 @@ SOFT_SOL =        np.array([[1,1,1,2,2,1,1,1,1,1],
                             [0,0,0,0,0,0,0,0,0,0],
                             [0,0,0,0,0,0,0,0,0,0]])
 
-SOFT_SOL_SPLIT =  np.array([[1,1,1,2,2,1,1,1,1,1],
-                            [1,1,1,2,2,1,1,1,1,1],
-                            [1,1,2,2,2,1,1,1,1,1],
-                            [1,1,2,2,2,1,1,1,1,1],
-                            [1,2,2,2,2,1,1,1,1,1],
-                            [0,0,0,0,0,0,0,1,1,1],
-                            [0,0,0,0,0,0,0,0,0,0],
-                            [0,0,0,0,0,0,0,0,0,0],
-                            [0,0,0,0,0,0,0,0,0,0]])
-
+# Solution given a pair hand
 PAIR_SOL =        np.array([[3,3,3,3,3,3,0,0,0,0],
                             [3,3,3,3,3,3,0,0,0,0],
                             [0,0,0,3,3,0,0,0,0,0],
@@ -101,137 +95,217 @@ PAIR_SOL =        np.array([[3,3,3,3,3,3,0,0,0,0],
                             [3,3,3,3,3,3,0,0,0,0],
                             [3,3,3,3,3,3,3,3,3,3],
                             [3,3,3,3,3,0,3,3,0,0],
-                            [0,0,0,0,0,0,0,0,0,0],
-                            [3,3,3,3,3,3,3,3,3,3]])
-WINS = 0.0
-LOSSES = 0.0
-PUSHES = 0.0
+                            [0,0,0,0,0,0,0,0,0,0]])
+
+WINS = 0.0 # Session Wins (x(Base)) 
+LOSSES = 0.0 # Session Losses (x(Base)) 
+PUSHES = 0.0 # Session Pushes (x(Base)) 
+LIFETIME_WINS = 0.0 # Lifetime Wins (x(Base)) 
+LIFETIME_LOSSES = 0.0 # Lifetime Losses (x(Base)) 
+LIFETIME_PUSHES = 0.0 # Lifetime Pushes (x(Base)) 
+
+# #                                                        2    3    4    5    6    7    8     9    10     J     Q     K     A
+# NAME_TO_COUNT_VECTOR = {'hi_lo'                     : [ 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0, -1.0],
+#                         'hi_opt1'                   : [ 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0,  0.0],
+#                         'hi_opt2'                   : [ 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0,  0.0],
+#                         'knock_out'                 : [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0, -1.0],
+#                         'omega2'                    : [ 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.0, -1.0, -2.0, -2.0, -2.0, -2.0,  0.0],
+#                         'ace_five'                  : [ 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
+#                         'zen_count'                 : [ 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -1.0],
+#                         'halves'                    : [ 0.5, 1.0, 1.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.0, -1.0, -1.0, -1.0],
+#                         'wong_halves'               : [ 0.5, 1.0, 1.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.0, -1.0, -1.0, -1.0],
+#                         'silver_fox'                : [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0],
+#                         'unbalanced_zen2'           : [ 1.0, 2.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -1.0],
+#                         'revere_point_count'        : [ 1.0, 2.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -2.0],
+#                         'uston_advanced_point_count': [ 1.0, 2.0, 2.0, 3.0, 2.0, 2.0, 1.0, -1.0,  3.0,  3.0,  3.0, -3.0,  0.0],
+#                         'canfield_expert'           : [ 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0,  0.0]}
+
+# count system to corresponding index
+CSYS_NAME = ['hi_lo', 'hi_opt1', 'hi_opt2',
+             'knock_out', 'omega2', 'ace_five',
+             'zen_count', 'halves', 'wong_halves', 
+             'silver_fox', 'unbalanced_zen2',
+             'revere_point_count', 'uston_advanced_point_count',
+             'canfield_expert'] 
+
+# card val for each system, [[2s],...,[As]], index = corresponding count system, rows = cval on each card 
+# based on system, columns = all cval for system
+CVAL_TRANSPOSE =   [[ 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 0.0],
+                    [ 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
+                    [ 1.0, 1.0, 2.0, 1.0, 2.0, 0.0, 2.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
+                    [ 1.0, 1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 1.5, 1.5, 1.0, 2.0, 2.0, 3.0, 1.0],
+                    [ 1.0, 1.0, 1.0, 1.0, 2.0, 0.0, 2.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
+                    [ 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 2.0, 1.0],
+                    [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                    [ 0.0, 0.0, 0.0, 0.0,-1.0, 0.0, 0.0,-0.5,-0.5,-1.0, 0.0, 0.0,-1.0,-1.0],
+                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
+                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
+                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
+                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-2.0,-3.0,-1.0],
+                    [-1.0, 0.0, 0.0,-1.0, 0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0, 0.0, 0.0]]
+
+# Running count for the card counting system
+CSYS_RUN_C = 0.0
+# Remaining decks in shoe
+REM_DECKS = 8
 
 #
 # Data Columns
 # 
 # Session Id - + INT, 
-# Number of games in session - + INT, 
-# Avg Bet (x(Base)) - + FLOAT, 
+# Cumulative Games - + INT
+# Games Simulated in Session - + INT, 
+# Lifetime Avg Bet (x(Base)) - + FLOAT, 
+# Lifetime winrate (W/L x(Base)) - +% FLOAT, 
+# Lifetime Amount won (x(Base)) - + FLOAT, 
+# Lifetime Amount loss (x(Base)) - + FLOAT, 
+# Lifetime Amount push (x(Base)) - + FLOAT,
+# Lifetime Net Gain/Loss (x(Base)) - +/- FLOAT
+# Session Avg Bet (x(Base)) - + FLOAT, 
 # Session winrate (W/L x(Base)) - +% FLOAT, 
-# Amount won (x(Base)) - + FLOAT, 
-# Amount loss (x(Base)) - + FLOAT, 
-# Amount push (x(Base)) - + FLOAT,
-# Net Gain/Loss (x(Base)) - +/- FLOAT 
+# Session Amount won (x(Base)) - + FLOAT, 
+# Session Amount loss (x(Base)) - + FLOAT, 
+# Session Amount push (x(Base)) - + FLOAT,
+# Session Net Gain/Loss (x(Base)) - +/- FLOAT 
 #
 def main():
     global WINS
     global LOSSES
     global PUSHES
-    i = 1
-    # sessionid = 1
-    # totalSessions = 1000
-    # numsim = 10000
-    # data = {'Session ID':[], 'Games Simulated in Session':[], 'Avg Bet (Xbase)':[], 'Session Winrate (W/L Xbase)': [], 'Amount won (Xbase)':[], 'Amount loss (Xbase)':[], 'Amount push (Xbase)':[], 'Net Gain/Loss (Xbase)': []}
-    # while (sessionid <= totalSessions):
-    #     while (i <= numsim):
-    #         play_game()
-    #         i += 1
-    #     i = 1
-    #     data['Session ID'].append(sessionid)
-    #     data['Games Simulated in Session'].append(numsim)
-    #     data['Avg Bet (Xbase)'].append((WINS+LOSSES+PUSHES)/float(numsim))
-    #     data['Session Winrate (W/L Xbase)'].append((WINS)/(WINS+LOSSES) * 100.0)
-    #     data['Amount won (Xbase)'].append(WINS)
-    #     data['Amount loss (Xbase)'].append(LOSSES)
-    #     data['Amount push (Xbase)'].append(PUSHES)
-    #     data['Net Gain/Loss (Xbase)'].append(WINS - LOSSES)  
-    #     WINS = 0.0
-    #     LOSSES = 0.0
-    #     PUSHES = 0.0
-    #     sessionid += 1
-    #     print('Percent Done: ', round(float(sessionid)/float(totalSessions)* 100.00, 2), "%", end='\r', flush=True)
-    # dataFrame = pd.DataFrame.from_dict(data)
-    # dataFrame.to_csv('basic_strategy_data.csv', index=False)
-    for j in range(10):
-        while (i < 100000):
-            play_game(0)
-            i+=1
-        print()
-        print(CSYS_NAME[0])
-        print("WINS :", WINS)
-        print("LOSSES :", LOSSES)
-        print("PUSHES :", PUSHES)
-        print("W/R :", (WINS)/(WINS+LOSSES) * 100.0, "%")
-        print()
-        WINS = 0.0
-        LOSSES = 0.0
-        PUSHES = 0.0
-        i = 1
-
-
-def count_strategy(currHand, dv): 
-    # 0 = Stand
-    # 1 = Hit
-    # 2 = Double Down
-    # 3 = Split
-    numCards = len(currHand.hand)
-    hVal = sum(currHand.hand)
-    if (11 in currHand.hand and numCards == 2 and not(currHand.hand[0] == currHand.hand[1])):
-        if (currHand.splitnum == 0):
-            return SOFT_SOL[hVal - 13][dv - 2]
-        else:
-            return SOFT_SOL_SPLIT[hVal - 13][dv - 2]
-    elif (currHand.splitnum >= 1 and currHand.splitnum < MAX_SPLIT): # Already split
-        if (numCards == 1): # Can't split, can double down
-            return HARD_SOL[hVal - 4][dv-2]
-        elif (numCards == 2 and currHand.hand[0] == currHand.hand[1]): # Can split, can't double down
-            if (PAIR_SOL[currHand.hand[0] - 2][dv - 2] == 3): # Recommended split
-                return PAIR_SOL[currHand.hand[0] - 2][dv - 2]
-            else: # Recommended hit/stand no double down
-                return np.where(HARD_SOL == 2, 1, HARD_SOL)[hVal - 4][dv-2]
-        elif (not(hVal > 17 or hVal < 8)): # Can't split, can't double down
-            return np.where(HARD_SOL == 2, 1, HARD_SOL)[hVal - 4][dv-2]
-        else:
-            return HARD_SOL[hVal - 4][dv-2]
-    elif (numCards == 2 and currHand.splitnum == 0 and currHand.hand[0] == currHand.hand[1] and PAIR_SOL[currHand.hand[0] - 2][dv - 2] == 3):
-        return PAIR_SOL[currHand.hand[0] - 2][dv - 2]
-    else: # Can't split, can't double down
-        return HARD_SOL[hVal - 4][dv-2]
+    global LIFETIME_WINS
+    global LIFETIME_LOSSES
+    global LIFETIME_PUSHES
+    totalSessions = 50
+    numsim = 200
+    for csys in range(len(CSYS_NAME)):
+        data = {'Session ID':[], 'Cumulative Games': [], 'Games Simulated in Session':[], 'Lifetime Avg Bet (Xbase)':[], 'Lifetime winrate (W/L x(Base))': [], 'Lifetime Amount won (Xbase)':[], 'Lifetime Amount loss (Xbase)':[], 'Lifetime Amount push (Xbase)':[], 'Lifetime Net Gain/Loss (Xbase)': [], 'Session Avg Bet (Xbase)':[], 'Session winrate (W/L x(Base))': [], 'Session Amount won (Xbase)':[], 'Session Amount loss (Xbase)':[], 'Session Amount push (Xbase)':[], 'Session Net Gain/Loss (Xbase)': []}
+        sessionid = 1
+        LIFETIME_WINS = 0.0
+        LIFETIME_LOSSES = 0.0
+        LIFETIME_PUSHES = 0.0
+        while (sessionid <= totalSessions):
+            i = 1
+            while (i <= numsim):
+                i += (1 + play_game(csys))
+            data['Session ID'].append(sessionid)
+            data['Cumulative Games'].append(sessionid * numsim)
+            data['Games Simulated in Session'].append(numsim)
+            data['Lifetime Avg Bet (Xbase)'].append(round((LIFETIME_WINS+LIFETIME_LOSSES+LIFETIME_PUSHES)/(float(numsim) * float(sessionid)), 3))
+            data['Lifetime winrate (W/L x(Base))'].append(round((LIFETIME_WINS)/(LIFETIME_WINS+LIFETIME_LOSSES) * 100.0, 3))
+            data['Lifetime Amount won (Xbase)'].append(round(LIFETIME_WINS, 3))
+            data['Lifetime Amount loss (Xbase)'].append(round(LIFETIME_LOSSES, 3))
+            data['Lifetime Amount push (Xbase)'].append(round(LIFETIME_PUSHES, 3))
+            data['Lifetime Net Gain/Loss (Xbase)'].append(round(LIFETIME_WINS - LIFETIME_LOSSES, 3))
+            data['Session Avg Bet (Xbase)'].append(round((WINS+LOSSES+PUSHES)/(float(numsim)), 3))
+            data['Session winrate (W/L x(Base))'].append(round((WINS)/(WINS+LOSSES) * 100.0, 3))
+            data['Session Amount won (Xbase)'].append(round(WINS, 3))
+            data['Session Amount loss (Xbase)'].append(round(LOSSES, 3))
+            data['Session Amount push (Xbase)'].append(round(PUSHES, 3))
+            data['Session Net Gain/Loss (Xbase)'].append(round(WINS - LOSSES, 3))
+            sessionid += 1
+            WINS = 0.0
+            LOSSES = 0.0
+            PUSHES = 0.0
+            print('Percent Done: ', round(float(sessionid)/float(totalSessions)* 100.00, 2), "%", end='\r', flush=True)
+        file = 'counting_'+ CSYS_NAME[csys] +'_data.csv'
+        print(file)
+        dataFrame = pd.DataFrame.from_dict(data)
+        dataFrame.to_csv(file, index=False)
 
 BASE = 1.0
-
+# Simulates one game of basic strategy blackjack
 def play_game(csys):
-    decksLeft = round(NUM_DECKS - float(len(EXCLUDE))/float(NUM_NORM_CARDS * 13))
-    if (decksLeft < 1):
-        decksLeft = 1
-    trueCount = math.floor(CSYS_RUN_C[csys]/decksLeft)
-    if (trueCount > 2):
-        pVals = [Hand(0, BASE * (trueCount - 1), [hit(csys)])]
-    elif (trueCount < 0):
-        pVals = [Hand(0, BASE * 0, [hit(csys)])]
+    gamePlayed = 0
+    nc1 = hit(csys)
+    nc2 = hit(csys)
+    nc3 = hit(csys)
+    nc4 = hit(csys)
+    trueCount = CSYS_RUN_C/float(REM_DECKS)
+    if (trueCount > 2.0):
+        pVals = [Hand(0, BASE * (trueCount - 1.0), [nc1])]
     else:
-        pVals = [Hand(0, BASE, [hit(csys)])]
-    dVals = [hit(csys)]
-    pVals[0].hand.append(hit(csys))
-    dVals.append(hit(csys))
-    gameState = Game_State(pVals.copy(), dVals, pVals.copy())
+        gamePlayed = -1
+        pVals = [Hand(0, BASE * 0.0, [nc1])]
+    dVals = [nc2]
+    pVals[0].hand.append(nc3) 
+    dVals.append(nc4)
+    pVals[0].classify()
+    gameState = Game_State(pVals.copy(), dVals.copy(), pVals.copy())
     while (not(gameState.is_stack_empty())):
         currHand = gameState.pop_hand()
         decision = -1
         while (not(decision == 0 or decision == 2)):
-            decision = count_strategy(currHand, gameState.dHand[0])
+            decision = basic_strategy(currHand, gameState.dHand)
             update_game_state(gameState, currHand, decision, csys)
             if (decision == 3 or decision == 1):
                 currHand = gameState.pop_hand()
-            if (sum(currHand.hand) > 21):
-                break
-    dVal = sum(gameState.dHand)
-    if (dVal > 21):
-        gameState.dHand[gameState.dHand.index(11)] = 1
-        dVal = sum(gameState.dHand)
-    while (dVal < 17):
-        newCard = hit(csys)
-        if (dVal + newCard > 21 and newCard == 11):
-            newCard = 1
-        gameState.dHand.append(newCard)
-        dVal = sum(gameState.dHand)
-    evaluate_game_state(gameState, csys)
+    gameState.dealer_draw(csys)
+    gameState.evaluate_game_state()
+    return gamePlayed
+
+# Returns the decision based on the current hand and the dealer shown card
+# currHand - the hand the action is for
+# dHand - the dealer's hand
+#
+# Classifiers:
+        # blackjack - ace and any 10 value card
+        # sadjack - both dealer and player have blackjack
+        # aces - two aces in the hand
+        # splitace - an hand with an ace that has been split
+        # softsplitace - an hand with an ace that has been split 2 cards
+        # hardsplitace - an hand with an ace that has been split more than 2 cards
+        # hard - hard hand
+        # harddouble - hard hand that can double down
+        # soft - hand with an ace
+        # softdouble - hand with an ace that can be doubled down
+        # pair - splitable hand with two of the same card
+# Decisions:
+        # 0 = Stand
+        # 1 = Hit
+        # 2 = Double Down
+        # 3 = Split
+def basic_strategy(currHand, dHand): 
+    classifier = currHand.classifier
+    hVal = sum(currHand.hand)
+
+    # Bust
+    if (hVal > 21 and not(11 in currHand.hand)):
+        return 0
+    
+    # Dealer Blackjack
+    if (11 in dHand and 10 in dHand and len(dHand) == 2):
+        if (currHand.classifier == 'blackjack'):
+            currHand.classifier = 'sadjack'
+        return 0
+    
+    # Base
+    if (classifier == 'blackjack'):
+        return 0
+    elif (classifier == 'splitace' or classifier == 'hardsplitace' or classifier == 'softsplitace'):
+        if (classifier == 'splitace'):
+            return HARD_SOL_D[8][dHand[0] - 2]
+        elif (classifier == 'softsplitace'):
+            return SOFT_SOL_D[hVal - 13][dHand[0] - 2]
+        else:
+            return SOFT_SOL[hVal - 13][dHand[0] - 2]
+    elif (classifier == 'aces'):
+        if (currHand.splitnum < MAX_SPLIT):
+            return 3
+        else:
+            return 0
+    elif (classifier == 'pair'):
+        if (PAIR_SOL[currHand.hand[0] - 2][dHand[0] - 2] == 3):
+            return PAIR_SOL[currHand.hand[0] - 2][dHand[0] - 2]
+        else:
+            return HARD_SOL_D[hVal - 4][dHand[0] - 2]
+    elif (classifier == 'softdouble'):
+        return SOFT_SOL_D[hVal - 13][dHand[0] - 2]
+    elif (classifier == 'soft'):
+        return SOFT_SOL[hVal - 13][dHand[0] - 2]
+    elif (classifier == 'harddouble'):
+        return HARD_SOL_D[hVal - 4][dHand[0] - 2]
+    else:
+        return HARD_SOL[hVal - 4][dHand[0] - 2]
 
 # #                                                      True, Run
 # NAME_TO_TRUE_C_RUN_C = {'hi_lo'                     : [ 0.0, 0.0],
@@ -253,180 +327,225 @@ def play_game(csys):
 def hit(csys):
     global EXCLUDE
     global CSYS_RUN_C
+    global REM_DECKS
     totEachCard = NUM_NORM_CARDS * NUM_DECKS
     if (len(EXCLUDE) >= NUM_NORM_CARDS * SHUFFLE_AFTER * 13):
         EXCLUDE = []
-        CSYS_RUN_C = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    h = r.choice(list(set([x for x in range(0, totEachCard * 13)]) - set(EXCLUDE)))
+        CSYS_RUN_C = 0.0
+    h = r.choice(list(set([x for x in range(1, totEachCard * 13)]) - set(EXCLUDE)))
     EXCLUDE.append(h)
+    REM_DECKS = NUM_DECKS - math.floor(float(len(EXCLUDE))/float(NUM_NORM_CARDS * 13))
     if   (0  * totEachCard  < h <= totEachCard * 1 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[0][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[0][csys]
         return 2
     elif (1  * totEachCard  < h <= totEachCard * 2 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[1][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[1][csys]
         return 3
     elif (2  * totEachCard  < h <= totEachCard * 3 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[2][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[2][csys]
         return 4
     elif (3  * totEachCard  < h <= totEachCard * 4 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[3][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[3][csys]
         return 5
     elif (4  * totEachCard  < h <= totEachCard * 5 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[4][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[4][csys]
         return 6
     elif (5  * totEachCard  < h <= totEachCard * 6 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[5][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[5][csys]
         return 7
     elif (6  * totEachCard  < h <= totEachCard * 7 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[6][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[6][csys]
         return 8
     elif (7  * totEachCard  < h <= totEachCard * 8 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[7][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[7][csys]
         return 9
     elif (8  * totEachCard  < h <= totEachCard * 9 ):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[8][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[8][csys]
         return 10
     elif (9  * totEachCard  < h <= totEachCard * 10):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[9][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[9][csys]
         return 10
     elif (10 * totEachCard  < h <= totEachCard * 11):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[10][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[10][csys]
         return 10
     elif (11 * totEachCard  < h <= totEachCard * 12):
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[11][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[11][csys]
         return 10
     else:
-        CSYS_RUN_C[csys] += CVAL_TRANSPOSE[12][csys]
+        CSYS_RUN_C += CVAL_TRANSPOSE[12][csys]
         return 11
 
-def to_string(cVal):
-    cvs = ''
-    fMap = {0:'10', 1:'J', 2:'Q', 3:'K'}
-    if (cVal == 11 or cVal == 1):
-        cvs = 'A'
-    elif (cVal == 10):
-        cvs = fMap[r.randint(0,3)]
-    else:
-        cvs = str(cVal)
-    return cvs
-
-def print_hand(hand):
-    hString = ""
-    for i in range(len(hand)):
-        hString = hString + to_string(hand[i]) + "   "
-    return hString
-
+# Applies given decision to gamestate
+#
+# currGameState - current state of the game
+# currHand - current hand for the decision
+# decision - the action applied to the current hand
 def update_game_state(currGameState, currHand, decision, csys):
-    if (not(decision == 3)):
-        newCard = hit(csys)
-        if (sum(currHand.hand) + newCard > 21 and newCard == 11):
-            newCard = 1
+    if (decision == 1 or decision == 2):
+        nc = hit(csys)
+        currHand.hand.append(nc)
+        while (sum(currHand.hand) > 21 and 11 in currHand.hand):
+            if (not(11 in currHand.hand)):
+                break
+            currHand.hand[currHand.hand.index(11)] = 1
     if (decision == 1):
-        currHand.hand.append(newCard)
-        currGameState.push_hand(currHand)
+        currHand.classify()
+        if (not(currHand.classifier == 'splitace' and currHand.classifier == 'softsplitace' and currHand.classifier == 'hardsplitace')):
+            currGameState.push_hand(currHand)
     elif (decision == 2):
-        currHand.hand.append(newCard)
-        currHand.betSize += currHand.betSize
+        currHand.classify()
+        currHand.betSize = 2.0 * currHand.betSize
     elif (decision == 3):
-        sHand1 = Hand(currHand.splitnum + 1, currHand.betSize, [currHand.hand[0]])
-        sHand2 = Hand(currHand.splitnum + 1, currHand.betSize, [currHand.hand[1]])
-        currGameState.pHands += [sHand1, sHand2]
+        nc1 = hit(csys)
+        nc2 = hit(csys)
+        sHand1 = Hand(currHand.splitnum + 1, currHand.betSize, [currHand.hand[0], nc1])
+        sHand1.classify()
+        sHand2 = Hand(currHand.splitnum + 1, currHand.betSize, [currHand.hand[1], nc2])
+        sHand2.classify()
+        currGameState.pHands.append(sHand1)
+        currGameState.pHands.append(sHand2)
         currGameState.pHands.remove(currHand)
         currGameState.push_hand(sHand1)
         currGameState.push_hand(sHand2)
 
-def evaluate_game_state(gameState, csys):
-    global WINS
-    global LOSSES
-    global PUSHES
-
-    i = 1
-    dealerHand = ""
-    dTot = sum(gameState.dHand)
-    for card in gameState.dHand:
-        dealerHand += to_string(card) + "  "
-    # print("\n    Dealer Hand: ", dealerHand[:len(dealerHand)-2])
-    for h in gameState.pHands:
-        handTotal = sum(h.hand)
-        handStr = ""
-        for card in h.hand:
-            handStr += to_string(card) + "  "
-        if (handTotal == 21 and 11 in h.hand and 10 in h.hand):
-            # print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Blackjack")
-            WINS += h.betSize * 1.5
-        elif (handTotal > 21):
-            # print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Bust")
-            LOSSES += h.betSize
-        elif (handTotal > dTot or dTot > 21):
-            # print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Win")
-            WINS += h.betSize
-        elif (handTotal == dTot):
-            # print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Push")
-            PUSHES += h.betSize
-        else:
-            # print("\n    Bet: ",h.betSize," Hand", i,"(", handStr[:len(handStr)-2],"): Loss")
-            LOSSES += h.betSize
-        i += 1
-    # print("    Ending Running Count ",CSYS_NAME[csys]," : ", CSYS_RUN_C[csys], '\n')
-
+# Defines the state of the game
+#
 # pHands = [hand1, hand2, etc], player hands
 # dHand = [dealer hand], dealer hand
-# hStack = [(splitnum, [hand]), (splitnum2, [hand2]), ...etc], hands with actions left
+# hStack = [hand1, hand2, ...etc], hands with actions left
 class Game_State:
     def __init__(self, pHands, dHand, hStack):
         self.pHands = pHands
         self.dHand = dHand
         self.hStack = hStack
 
+    # Evaluates the game state
+    def evaluate_game_state(self):
+        global WINS
+        global LOSSES
+        global PUSHES
+        global LIFETIME_WINS
+        global LIFETIME_LOSSES
+        global LIFETIME_PUSHES
+        for h in self.pHands:
+            handTotal = sum(h.hand)
+            dTot = sum(self.dHand)
+            if (11 in self.dHand and 10 in self.dHand and len(self.dHand) == 2):
+                if (h.classifier == 'sadjack'):
+                    PUSHES += h.betSize
+                    LIFETIME_PUSHES += h.betSize
+                else:
+                    LOSSES += h.betSize
+                    LIFETIME_LOSSES += h.betSize
+            elif (h.classifier == 'blackjack'):
+                WINS += h.betSize * 1.5
+                LIFETIME_WINS += h.betSize * 1.5
+            elif (handTotal == dTot):
+                if (handTotal > 21):
+                    LOSSES += h.betSize
+                    LIFETIME_LOSSES += h.betSize
+                else:
+                    PUSHES += h.betSize
+                    LIFETIME_PUSHES += h.betSize
+            elif ((handTotal < 22 and handTotal > dTot and dTot < 22) or (handTotal < 22 and dTot > 21)):
+                WINS += h.betSize
+                LIFETIME_WINS += h.betSize
+            else:
+                LOSSES += h.betSize
+                LIFETIME_LOSSES += h.betSize
+
+    # Simulates the dealer's turn
+    def dealer_draw(self, csys):
+        while (sum(self.dHand) > 21 and 11 in self.dHand):
+            if (not(11 in self.dHand)):
+                break
+            self.dHand[self.dHand.index(11)] = 1
+        while (sum(self.dHand) < 17):
+            c = hit(csys)
+            if (c + sum(self.dHand) > 21 and c == 11):
+                c = 1
+            self.dHand.append(c)
+            while (sum(self.dHand) > 21 and 11 in self.dHand):
+                if (not(11 in self.dHand)):
+                    break
+                self.dHand[self.dHand.index(11)] = 1
+
+    # Adds a hand to the available actions
+    #
+    # hand - the hand being added
     def push_hand(self, hand):
         self.hStack.append(hand)
 
+    # Returns the next hand in the action stack
     def pop_hand(self):
         return self.hStack.pop()
 
+    # Returns True if the stack is empty, False otherwise
     def is_stack_empty(self):
         return len(self.hStack) == 0
 
-    def print(self):
-        pHandStr = " " + str([hand.print() for hand in self.pHands]) + ","
-        hStackStr = " " + str([hand.print() for hand in self.hStack]) + ","
-        print('player hands: ', pHandStr[:len(pHandStr)-1])
-        print('dealer hand: ', self.dHand)
-        print('hands with actions left: ', hStackStr[:len(hStackStr)-1])
-
+# Defines the structure of a hand
+#
+# splitnum - number of splits in current hand
+# betSize - size of bet
+# hand - list of cards in hand
+# classifier - the type of hand
 class Hand:
     def __init__(self, splitnum, betSize, hand):
         self.splitnum = splitnum
         self.betSize = betSize
         self.hand = hand
+        self.classifier = None
     
-    def print(self):
-        print('splitnum: ', self.splitnum, 'bet size: ', self.betSize, 'hand: ', self.hand)
+    # Classifies a hand
+    #
+    # Classifiers:
+        # blackjack - ace and any 10 value card
+        # sadjack - both dealer and player have blackjack
+        # aces - two aces in the hand
+        # splitace - an hand with an ace that has been split
+        # softsplitace - an hand with an ace that has been split 2 cards
+        # hardsplitace - an hand with an ace that has been split more than 2 cards
+        # hard - hard hand
+        # harddouble - hard hand that can double down
+        # soft - hand with an ace
+        # softdouble - hand with an ace that can be doubled down
+        # pair - splitable hand with two of the same card
+    def classify(self):
+        hVal = sum(self.hand)
+        hSize = len(self.hand)
+        if (11 in self.hand or 1 in self.hand):
+            if (len(self.hand) == self.hand.count(11) + self.hand.count(1)):
+                if (hSize == 2):
+                    if (self.splitnum < MAX_SPLIT):
+                        self.classifier = 'aces'
+                    else:
+                        self.classifier = 'splitace'
+                else:
+                    self.classifier =  'hard'
+            elif (hSize == 2):
+                if (10 in self.hand and 11 in self.hand and self.splitnum == 0):
+                    self.classifier =  'blackjack'
+                else:
+                    if (self.splitnum == 0):
+                        self.classifier = 'softdouble'
+                    else:
+                        self.classifier = 'softsplitace'
+            else:
+                if (self.splitnum == 0):
+                    if (hVal < 22):
+                        self.classifier = 'soft'
+                    else:
+                        self.classifier = 'hard'
+                else:
+                    self.classifier = 'hardsplitace'
+        elif (hSize == 2):
+            if (self.hand[0] == self.hand[1] and self.splitnum < MAX_SPLIT):
+                self.classifier =  'pair'
+            else: 
+                self.classifier =  'harddouble'
+        else:
+            self.classifier = 'hard'
 
 if __name__ == "__main__":
     main()
-
-# def transpose_cval():
-#     dummy = np.array([[ 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                     [ 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0,  0.0],
-#                     [ 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0,  0.0],
-#                     [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                     [ 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.0, -1.0, -2.0, -2.0, -2.0, -2.0,  0.0],
-#                     [ 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
-#                     [ 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-#                     [ 0.5, 1.0, 1.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                     [ 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0,  0.0],
-#                     [ 0.5, 1.0, 1.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                     [-2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,  1.0, -2.0, -2.0, -2.0, -2.0, -2.0],
-#                     [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                     [ 1.0, 2.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-#                     [ 1.0, 2.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -2.0],
-#                     [ 1.0, 2.0, 2.0, 3.0, 2.0, 2.0, 1.0, -1.0,  3.0,  3.0,  3.0, -3.0,  0.0],
-#                     [ 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0,  0.0]]).transpose()
-#     for i in range(len(dummy)):
-#         construct = "["
-#         for j in range(len(dummy[i])):
-#             construct += str(dummy[i][j]) + ","
-#         construct = construct[:len(construct) - 1 ] + "],"
-#         print(construct)
-#         construct = ""
