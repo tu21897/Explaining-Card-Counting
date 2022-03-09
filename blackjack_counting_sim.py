@@ -10,14 +10,13 @@
 # Imports
 import random as r
 import math
-from matplotlib.pyplot import flag
 import numpy as np
 import pandas as pd
 
 
 ##################### Settings #####################
-NUM_DECKS = 8 # Number of decks in shoe
-SHUFFLE_AFTER = 7 # Where the deck is cut to be reshuffled
+NUM_DECKS = 6 # Number of decks in shoe
+SHUFFLE_AFTER = 5 # Where the deck is cut to be reshuffled
 NUM_NORM_CARDS = 4 # Number of each card in a deck
 MAX_SPLIT = 3 # Maximum number of splits allowed
 
@@ -122,7 +121,7 @@ LIFETIME_PUSHES = 0.0 # Lifetime Pushes (x(Base))
 
 # count system to corresponding index
 CSYS_NAME = ['hi_lo', 'hi_opt1', 'hi_opt2',
-             'knock_out', 'omega2', 'ace_five',
+             'knock_out', 'omega2', 
              'zen_count', 'halves', 'wong_halves', 
              'silver_fox', 'unbalanced_zen2',
              'revere_point_count', 'uston_advanced_point_count',
@@ -130,24 +129,24 @@ CSYS_NAME = ['hi_lo', 'hi_opt1', 'hi_opt2',
 
 # card val for each system, [[2s],...,[As]], index = corresponding count system, rows = cval on each card 
 # based on system, columns = all cval for system
-CVAL_TRANSPOSE =   [[ 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 0.0],
-                    [ 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 1.0, 1.0, 2.0, 1.0, 2.0, 0.0, 2.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 1.0, 1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 1.5, 1.5, 1.0, 2.0, 2.0, 3.0, 1.0],
-                    [ 1.0, 1.0, 1.0, 1.0, 2.0, 0.0, 2.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 2.0, 1.0],
-                    [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
-                    [ 0.0, 0.0, 0.0, 0.0,-1.0, 0.0, 0.0,-0.5,-0.5,-1.0, 0.0, 0.0,-1.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, 0.0,-2.0,-1.0,-1.0,-1.0,-2.0,-2.0,-3.0,-1.0],
-                    [-1.0, 0.0, 0.0,-1.0, 0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0, 0.0, 0.0]]
+CVAL_TRANSPOSE =   [[ 1.0, 0.0, 1.0, 1.0, 1.0,  1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 0.0],
+                    [ 1.0, 1.0, 1.0, 1.0, 1.0,  1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
+                    [ 1.0, 1.0, 2.0, 1.0, 2.0,  2.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
+                    [ 1.0, 1.0, 2.0, 1.0, 2.0,  2.0, 1.5, 1.5, 1.0, 2.0, 2.0, 3.0, 1.0],
+                    [ 1.0, 1.0, 1.0, 1.0, 2.0,  2.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
+                    [ 0.0, 0.0, 1.0, 1.0, 1.0,  1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 2.0, 1.0],
+                    [ 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                    [ 0.0, 0.0, 0.0, 0.0,-1.0,  0.0,-0.5,-0.5,-1.0, 0.0, 0.0,-1.0,-1.0],
+                    [-1.0,-1.0,-2.0,-1.0,-2.0, -2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
+                    [-1.0,-1.0,-2.0,-1.0,-2.0, -2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
+                    [-1.0,-1.0,-2.0,-1.0,-2.0, -2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
+                    [-1.0,-1.0,-2.0,-1.0,-2.0, -2.0,-1.0,-1.0,-1.0,-2.0,-2.0,-3.0,-1.0],
+                    [-1.0, 0.0, 0.0,-1.0, 0.0, -1.0,-1.0,-1.0,-1.0,-1.0,-2.0, 0.0, 0.0]]
 
 # Running count for the card counting system
 CSYS_RUN_C = 0.0
 # Remaining decks in shoe
-REM_DECKS = 8
+REM_DECKS = 6
 
 #
 # Data Columns
@@ -175,10 +174,11 @@ def main():
     global LIFETIME_WINS
     global LIFETIME_LOSSES
     global LIFETIME_PUSHES
-    totalSessions = 50
-    numsim = 200
+    global GAMES_PLAYED
+    totalSessions = 100
+    numsim = 1000
     for csys in range(len(CSYS_NAME)):
-        data = {'Session ID':[], 'Cumulative Games': [], 'Games Simulated in Session':[], 'Lifetime Avg Bet (Xbase)':[], 'Lifetime winrate (W/L x(Base))': [], 'Lifetime Amount won (Xbase)':[], 'Lifetime Amount loss (Xbase)':[], 'Lifetime Amount push (Xbase)':[], 'Lifetime Net Gain/Loss (Xbase)': [], 'Session Avg Bet (Xbase)':[], 'Session winrate (W/L x(Base))': [], 'Session Amount won (Xbase)':[], 'Session Amount loss (Xbase)':[], 'Session Amount push (Xbase)':[], 'Session Net Gain/Loss (Xbase)': []}
+        data = {'Session ID':[], 'Cumulative Games': [], 'Games Simulated in Session':[],'Games Played in Session':[], 'Lifetime Avg Bet (Xbase)':[], 'Lifetime winrate (W/L x(Base))': [], 'Lifetime Amount won (Xbase)':[], 'Lifetime Amount loss (Xbase)':[], 'Lifetime Amount push (Xbase)':[], 'Lifetime Net Gain/Loss (Xbase)': [], 'Session Avg Bet (Xbase)':[], 'Session winrate (W/L x(Base))': [], 'Session Amount won (Xbase)':[], 'Session Amount loss (Xbase)':[], 'Session Amount push (Xbase)':[], 'Session Net Gain/Loss (Xbase)': []}
         sessionid = 1
         LIFETIME_WINS = 0.0
         LIFETIME_LOSSES = 0.0
@@ -186,10 +186,12 @@ def main():
         while (sessionid <= totalSessions):
             i = 1
             while (i <= numsim):
-                i += (1 + play_game(csys))
+                play_game(csys)
+                i += 1
             data['Session ID'].append(sessionid)
             data['Cumulative Games'].append(sessionid * numsim)
             data['Games Simulated in Session'].append(numsim)
+            data['Games Played in Session'].append(GAMES_PLAYED)
             data['Lifetime Avg Bet (Xbase)'].append(round((LIFETIME_WINS+LIFETIME_LOSSES+LIFETIME_PUSHES)/(float(numsim) * float(sessionid)), 3))
             data['Lifetime winrate (W/L x(Base))'].append(round((LIFETIME_WINS)/(LIFETIME_WINS+LIFETIME_LOSSES) * 100.0, 3))
             data['Lifetime Amount won (Xbase)'].append(round(LIFETIME_WINS, 3))
@@ -206,26 +208,30 @@ def main():
             WINS = 0.0
             LOSSES = 0.0
             PUSHES = 0.0
-            print('Percent Done: ', round(float(sessionid)/float(totalSessions)* 100.00, 2), "%", end='\r', flush=True)
+            GAMES_PLAYED = 0.0
+            print('Percent Done: ', round(float(sessionid)/float(totalSessions)* 100.00, 2), "%", end='\r\r\r\r\r\r\r', flush=True)
         file = 'counting_'+ CSYS_NAME[csys] +'_data.csv'
         print(file)
         dataFrame = pd.DataFrame.from_dict(data)
         dataFrame.to_csv(file, index=False)
 
-BASE = 1.0
+GAMES_PLAYED = 0
+BASE = 10.0
 # Simulates one game of basic strategy blackjack
 def play_game(csys):
-    gamePlayed = 0
+    global GAMES_PLAYED
+    bet = BASE
+    trueCount = math.floor(CSYS_RUN_C/float(REM_DECKS))
+    if (trueCount >= 2.0):
+        GAMES_PLAYED += 1
+        bet *= trueCount - 1.0
+    else:
+        bet *= 0.0
     nc1 = hit(csys)
     nc2 = hit(csys)
     nc3 = hit(csys)
     nc4 = hit(csys)
-    trueCount = CSYS_RUN_C/float(REM_DECKS)
-    if (trueCount > 2.0):
-        pVals = [Hand(0, BASE * (trueCount - 1.0), [nc1])]
-    else:
-        gamePlayed = -1
-        pVals = [Hand(0, BASE * 0.0, [nc1])]
+    pVals = [Hand(0, bet, [nc1])]
     dVals = [nc2]
     pVals[0].hand.append(nc3) 
     dVals.append(nc4)
@@ -241,7 +247,6 @@ def play_game(csys):
                 currHand = gameState.pop_hand()
     gameState.dealer_draw(csys)
     gameState.evaluate_game_state()
-    return gamePlayed
 
 # Returns the decision based on the current hand and the dealer shown card
 # currHand - the hand the action is for
