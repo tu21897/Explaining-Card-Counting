@@ -1,94 +1,72 @@
 <!DOCTYPE HTML>
 <html xml:lang="en" lang="en">
 <head>
-<title>CSE442 | Final Project</title>
-<style media="all">
-* { padding: 0; margin: 0; }
-body {
-margin: 0 auto 0 auto;
-padding: 0;
-max-width: 1200px;
-font-family: "Avenir", "Avenir Next", Helvetica Neue, Arial;
-font-size: 0.95em;
-}
-a, a:visited { text-decoration: none; color: #7533f4; }
-a:hover { text-decoration: underline; color: #f4b014; }
-h1, h2, h3, h4, h5 {
-color: #492a7c;
-background-color: inherit;
-font-weight: normal;
-padding: 0 0 5px 0;
-margin: 15px 0 0 0;
-border: none;
-clear: right;
-}
-h1 { font-size: 24pt; margin:  5px 0 10px 0; line-height: 28px; }
-h2 { font-size: 14pt; margin: 30px 0 15px 0; letter-spacing: 0.01em; border-bottom: 1px solid #ccc;  line-height: 20px;}
-h3 { font-size: 13pt; }
-h4 { font-size: 12pt; }
-h5 { font-size: 11pt; }
-p { margin: 0 0 10px 0; }
-.content {
-margin: 0;
-padding: 15px 20px;
-background-color: #ffffff;
-}
-.title, .title h1, .title a {
-color: #492a7c;
-font-size: 24pt;
-margin-bottom: 20px;
-margin-top: 5px;
-}
-.footer {
-border-top: 1px solid #ccc;
-margin-top: 30px;
-padding-top: 4px;
-text-align: right;
-font-size: 12px;
-}
-.footer a {
-color: #21346B;
-}
-.footer a:hover {
-color: #ce3333;
-}
-</style>
+  <title>Blackjack Card Counting</title>
+
+  <!-- fullPage https://github.com/alvarotrigo/fullPage.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js" integrity="sha512-gSf3NCgs6wWEdztl1e6vUqtRP884ONnCNzCpomdoQ0xXsk06lrxJsR7jX5yM/qAGkPGsps+4bLV5IEjhOZX+gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.css" integrity="sha512-4rPgyv5iG0PZw8E+oRdfN/Gq+yilzt9rQ8Yci2jJ15rAyBmF0HBE4wFjBkoB72cxBeg63uobaj1UcNt/scV93w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- D3 https://d3js.org -->
+  <script src="https://d3js.org/d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <link id='stylesheet' rel='stylesheet' href='/stylesheet.css'/>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
 </head>
 <body>
-<div class="content">
-<section class="title">
-<a href="/">[TODO: add your project name here]</a>
-</section>
+  <div id="fullpage">
 
-<section>
-<p>
-    <strong>Team Members</strong>: [TODO] team member #1, team member #2, team member #3, team member #4 (if applicable)
-</p>
-</section>
+  <section class="section title">
+  <a href="/">Blackjack Card Counting</a>
+  </section>
 
-<section>
-<em>[TODO: add your visualization here]</em>
-</section>
+  <section class="section">
+      <p>Card counting is a process where content content lorem ipsum</p>
+      <div class="row">
+          <div class='item'>
+              <p>Stats widget</p>
+          </div>
+          <div class='item'>
+              <p>Stats widget</p>
+          </div>
+          <div class='item'>
+              <p>Stats widget</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="item">
+              <p>Decrease count pile</p>
+          </div>
+          <div class="item">
+              <p>Deck/neutral pile</p>
+          </div>
+          <div class="item">
+              <p>Increase count pile</p>
+          </div>
+      </div>
+  </section>
 
-<section>
-<h2>Design Decisions</h2>
-<em>[TODO: add a rationale for your design decisions.
-    How did you choose your particular visual encodings and interaction techniques?
-    What alternatives did you consider and how did you arrive at your ultimate choices?]</em>
-</section>
+  <section class='section'>
+    <h2>Effect of card counting on winnings</h2>
+    <div>This will be a graph</div>
+    <p>Maybe a slider or some other c</p>
+    <div class="card red spades">a</div>
+    <div class="card red hearts">10</div>
+    <div class='card black clubs'>8</div>
+    <div class='card back'></div>
+    <p>Test</p>
+  </section>
 
-<section>
-<h2>Development Process</h2>
-<em>[TODO: describe how the work was split among the team members.
-    Include a commentary on the development process, including answers to the following questions: 
-    Roughly how much time did you spend developing your application (in people-hours)? 
-    What aspects took the most time?]</em>
-</section>
-
-<div class="footer">
-<a href="https://courses.cs.washington.edu/courses/cse442/22wi/">CSE 442 Data Visualization</a>
-<a href="http://www.washington.edu">University of Washington</a>
-</div>
-</div>
+  </div>
+  <script>
+  // See: https://github.com/alvarotrigo/fullPage.js#vanilla-js-example-with-all-options
+  new fullpage('#fullpage', {
+      autoScrolling: true,
+      navigation: true,
+      navigationPosition: 'right',
+      navigationTooltips: ['Introduction', 'Demonstration', 'Effectiveness'],
+  }).moveTo(3); // TODO: remove this moveTo call
+  </script>
 </body>
 </html> 

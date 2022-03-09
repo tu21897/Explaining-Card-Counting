@@ -1,0 +1,181 @@
+:root {
+    --body-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+    /* Colors */
+    --red: #ff0000;
+    --black: #000000;
+    --link-color: #7533f4;
+    --header-color: #492a7c;
+    --cardback: #5c5cd6;
+
+    /* Responsive elements */
+    --card-width: 100px;
+}
+
+/* Desktop/wide browsers */
+@media(min-width: 700px) { :root {
+    --card-width: 150px;
+}}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0 auto;
+    padding: 0 10px;
+    max-width: 1200px;
+    font-family: var(--body-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a,
+a:visited {
+    text-decoration: none;
+    color: var(--link-color);
+}
+a:hover {
+    text-decoration: underline;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    color: var(--header-color);
+    font-weight: normal;
+    padding: 0 0 5px 0;
+    margin: 15px 0 0 0;
+}
+
+h1 {
+    font-size: 24pt;
+    margin: 5px 0 10px 0;
+    line-height: 28px;
+}
+
+h2 {
+    font-size: 14pt;
+    margin: 30px 0 15px 0;
+    letter-spacing: 0.01em;
+    border-bottom: 1px solid #ccc;
+    line-height: 20px;
+}
+
+h3 {
+    font-size: 13pt;
+}
+
+h4 {
+    font-size: 12pt;
+}
+
+h5 {
+    font-size: 11pt;
+}
+
+p {
+    margin: 0 0 10px 0;
+    line-height: 1.6;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.item {
+    width: fit-content;
+    flex-grow: 0;
+    text-align: center;
+}
+
+.title,
+.title h1,
+.title a {
+    color: #492a7c;
+    font-size: 24pt;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.fp-tooltip {
+    color: black !important;
+}
+
+/* Playing Cards */
+/* TODO: consider instead: https://selfthinker.github.io/CSS-Playing-Cards/ */
+.card {
+    padding: 15px;
+    padding-top: 8px;
+    width: var(--card-width);
+    height: calc(1.49 * var(--card-width));
+    border: 2px solid var(--black);
+    border-radius: 16px;
+    font-size: calc(0.55 * var(--card-width));
+    text-align: center;
+    text-transform: uppercase;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.card:after {
+    display: block;
+}
+
+.back {
+    font-size: 0;
+    box-shadow:
+        0 4px 0 var(--cardback) inset,
+        4px 0 0 var(--cardback) inset,
+        0 -4px 0 var(--cardback) inset,
+        -4px 0 0 var(--cardback) inset,
+        0 8px 0 white inset,
+        8px 0 0 white inset,
+        0 -8px 0 white inset,
+        -8px 0 0 white inset,
+        0 12px 0 var(--cardback) inset,
+        12px 0 0 var(--cardback) inset,
+        0 -12px 0 var(--cardback) inset,
+        -12px 0 0 var(--cardback) inset;
+    background-size: calc((var(--card-width) - 4px) / 4)
+                     calc((var(--card-width) - 4px) / 4);
+    background-image:
+        linear-gradient(135deg, var(--cardback) 25%, transparent 25%),
+        linear-gradient(225deg, var(--cardback) 25%, transparent 25%),
+        linear-gradient(315deg, var(--cardback) 25%, transparent 25%),
+        linear-gradient(45deg, var(--cardback) 25%, transparent 25%);
+}
+
+.back::after {
+    content: " ";
+}
+
+.spades::after {
+    content: "\2660";
+}
+
+.clubs:after {
+    content: "\2663";
+}
+
+.hearts:after {
+    content: "\2665";
+}
+
+.diamonds:after {
+    content: "\2666";
+}
+
+.red {
+    color: var(--red);
+}
+
+.black {
+    color: var(--black);
+}
