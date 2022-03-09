@@ -122,6 +122,7 @@ p {
     text-transform: uppercase;
     display: inline-block;
     vertical-align: bottom;
+    line-height: 1.2;
 }
 
 .card:after {
