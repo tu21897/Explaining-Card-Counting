@@ -107,41 +107,35 @@ LIFETIME_PUSHES = 0.0 # Lifetime Pushes (x(Base))
 # NAME_TO_COUNT_VECTOR = {'hi_lo'                     : [ 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0, -1.0],
 #                         'hi_opt1'                   : [ 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0,  0.0],
 #                         'hi_opt2'                   : [ 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0,  0.0],
-#                         'knock_out'                 : [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,  0.0, -1.0, -1.0, -1.0, -1.0, -1.0],
 #                         'omega2'                    : [ 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.0, -1.0, -2.0, -2.0, -2.0, -2.0,  0.0],
-#                         'ace_five'                  : [ 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
 #                         'zen_count'                 : [ 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -1.0],
 #                         'halves'                    : [ 0.5, 1.0, 1.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.0, -1.0, -1.0, -1.0],
 #                         'wong_halves'               : [ 0.5, 1.0, 1.0, 1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.0, -1.0, -1.0, -1.0],
 #                         'silver_fox'                : [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0],
-#                         'unbalanced_zen2'           : [ 1.0, 2.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -1.0],
 #                         'revere_point_count'        : [ 1.0, 2.0, 2.0, 2.0, 2.0, 1.0, 0.0,  0.0, -2.0, -2.0, -2.0, -2.0, -2.0],
-#                         'uston_advanced_point_count': [ 1.0, 2.0, 2.0, 3.0, 2.0, 2.0, 1.0, -1.0,  3.0,  3.0,  3.0, -3.0,  0.0],
 #                         'canfield_expert'           : [ 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0,  0.0]}
 
 # count system to corresponding index
 CSYS_NAME = ['hi_lo', 'hi_opt1', 'hi_opt2',
-             'knock_out', 'omega2', 
-             'zen_count', 'halves', 'wong_halves', 
-             'silver_fox', 'unbalanced_zen2',
-             'revere_point_count', 'uston_advanced_point_count',
-             'canfield_expert'] 
+             'omega2', 'zen_count',
+             'halves', 'wong_halves', 'silver_fox', 
+             'revere_point_count','canfield_expert'] 
 
 # card val for each system, [[2s],...,[As]], index = corresponding count system, rows = cval on each card 
 # based on system, columns = all cval for system
-CVAL_TRANSPOSE =   [[ 1.0, 0.0, 1.0, 1.0, 1.0,  1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 0.0],
-                    [ 1.0, 1.0, 1.0, 1.0, 1.0,  1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 1.0, 1.0, 2.0, 1.0, 2.0,  2.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 1.0, 1.0, 2.0, 1.0, 2.0,  2.0, 1.5, 1.5, 1.0, 2.0, 2.0, 3.0, 1.0],
-                    [ 1.0, 1.0, 1.0, 1.0, 2.0,  2.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0],
-                    [ 0.0, 0.0, 1.0, 1.0, 1.0,  1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 2.0, 1.0],
-                    [ 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
-                    [ 0.0, 0.0, 0.0, 0.0,-1.0,  0.0,-0.5,-0.5,-1.0, 0.0, 0.0,-1.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, -2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, -2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, -2.0,-1.0,-1.0,-1.0,-2.0,-2.0, 3.0,-1.0],
-                    [-1.0,-1.0,-2.0,-1.0,-2.0, -2.0,-1.0,-1.0,-1.0,-2.0,-2.0,-3.0,-1.0],
-                    [-1.0, 0.0, 0.0,-1.0, 0.0, -1.0,-1.0,-1.0,-1.0,-1.0,-2.0, 0.0, 0.0]]
+CVAL_TRANSPOSE =   [[ 1.0, 0.0, 1.0,  1.0, 1.0, 0.5, 0.5, 1.0,  1.0, 0.0],
+                    [ 1.0, 1.0, 1.0,  1.0, 1.0, 1.0, 1.0, 1.0,  2.0, 1.0],
+                    [ 1.0, 1.0, 2.0,  2.0, 2.0, 1.0, 1.0, 1.0,  2.0, 1.0],
+                    [ 1.0, 1.0, 2.0,  2.0, 2.0, 1.5, 1.5, 1.0,  2.0, 1.0],
+                    [ 1.0, 1.0, 1.0,  2.0, 2.0, 1.0, 1.0, 1.0,  2.0, 1.0],
+                    [ 0.0, 0.0, 1.0,  1.0, 1.0, 0.5, 0.5, 1.0,  1.0, 1.0],
+                    [ 0.0, 0.0, 0.0,  0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0],
+                    [ 0.0, 0.0, 0.0, -1.0, 0.0,-0.5,-0.5,-1.0,  0.0,-1.0],
+                    [-1.0,-1.0,-2.0, -2.0,-2.0,-1.0,-1.0,-1.0, -2.0,-1.0],
+                    [-1.0,-1.0,-2.0, -2.0,-2.0,-1.0,-1.0,-1.0, -2.0,-1.0],
+                    [-1.0,-1.0,-2.0, -2.0,-2.0,-1.0,-1.0,-1.0, -2.0,-1.0],
+                    [-1.0,-1.0,-2.0, -2.0,-2.0,-1.0,-1.0,-1.0, -2.0,-1.0],
+                    [-1.0, 0.0, 0.0,  0.0,-1.0,-1.0,-1.0,-1.0, -2.0, 0.0]]
 
 # Running count for the card counting system
 CSYS_RUN_C = 0.0
@@ -175,7 +169,7 @@ def main():
     global LIFETIME_LOSSES
     global LIFETIME_PUSHES
     global GAMES_PLAYED
-    totalSessions = 100
+    totalSessions = 10000
     numsim = 1000
     for csys in range(len(CSYS_NAME)):
         data = {'Session ID':[], 'Cumulative Games': [], 'Games Simulated in Session':[],'Games Played in Session':[], 'Lifetime Avg Bet (Xbase)':[], 'Lifetime winrate (W/L x(Base))': [], 'Lifetime Amount won (Xbase)':[], 'Lifetime Amount loss (Xbase)':[], 'Lifetime Amount push (Xbase)':[], 'Lifetime Net Gain/Loss (Xbase)': [], 'Session Avg Bet (Xbase)':[], 'Session winrate (W/L x(Base))': [], 'Session Amount won (Xbase)':[], 'Session Amount loss (Xbase)':[], 'Session Amount push (Xbase)':[], 'Session Net Gain/Loss (Xbase)': []}
@@ -215,9 +209,10 @@ def main():
         dataFrame = pd.DataFrame.from_dict(data)
         dataFrame.to_csv(file, index=False)
 
-GAMES_PLAYED = 0
-BASE = 10.0
-# Simulates one game of basic strategy blackjack
+GAMES_PLAYED = 0 # Games played in session
+BASE = 1.0 # Base bet amount
+# Simulates one game of counting strategy blackjack
+# csys - the counting strategy
 def play_game(csys):
     global GAMES_PLAYED
     bet = BASE
@@ -312,23 +307,8 @@ def basic_strategy(currHand, dHand):
     else:
         return HARD_SOL[hVal - 4][dHand[0] - 2]
 
-# #                                                      True, Run
-# NAME_TO_TRUE_C_RUN_C = {'hi_lo'                     : [ 0.0, 0.0],
-#                         'hi_opt1'                   : [ 0.0, 0.0],
-#                         'hi_opt2'                   : [ 0.0, 0.0],
-#                         'knock_out'                 : [ 0.0, 0.0],
-#                         'omega2'                    : [ 0.0, 0.0],
-#                         'ace_five'                  : [ 0.0, 0.0],
-#                         'zen_count'                 : [ 0.0, 0.0],
-#                         'halves'                    : [ 0.0, 0.0],
-#                         'kiss'                      : [ 0.0, 0.0],
-#                         'wong_halves'               : [ 0.0, 0.0],
-#                         'j_noir'                    : [ 0.0, 0.0],
-#                         'silver_fox'                : [ 0.0, 0.0],
-#                         'unbalanced_zen2'           : [ 0.0, 0.0],
-#                         'revere_point_count'        : [ 0.0, 0.0],
-#                         'uston_advanced_point_count': [ 0.0, 0.0],
-#                         'canfield_expert'           : [ 0.0, 0.0]}
+# Draws a card without replacement, shuffles after SHUFFLE_AFTER amount of decks
+# csys - the card counting system to update
 def hit(csys):
     global EXCLUDE
     global CSYS_RUN_C
