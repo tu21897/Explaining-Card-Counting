@@ -27,7 +27,7 @@
             <h2 class="subtitle text-xl">Behind The Scenes In:</h2>
         </div>
         <div class = "countsect pb-10">
-            <h2 id='simnum' end="100000000" class="count text-4xl">0</h2>
+            <h2 id='simnum' end="100000000" incspeed="10000000" delay="7" class="count text-4xl">0</h2>
             <h2 class="simtitle text-base">Simulated Games Of Blackjack</h2>
         </div>
         <div class = "namesect">
@@ -178,15 +178,32 @@
         let updateCount = () => {
             let simnum = document.getElementById("simnum");
             let end = parseInt(simnum.getAttribute("end"));
+            let incspeed = parseInt(simnum.getAttribute("incspeed"));
             let count = parseInt(simnum.innerText.replace(/,/g, ''));
-            let inc = Math.trunc(end / 256);
-            if (count < end) {
-            INF = new Intl.NumberFormat('en-US');
-            simnum.innerText = INF.format(count + inc);
-            setTimeout(updateCount, 7);
+            let INF = new Intl.NumberFormat('en-US');
+            let delay = parseInt(simnum.getAttribute("delay"));
+            if (incspeed <= 255) {
+                simnum.setAttribute('incspeed', 255);
             } else {
-            count.innerText = end;
+                simnum.setAttribute('incspeed', incspeed*.975);
             }
+            let inc = Math.trunc(end / incspeed)
+            if (count <= end - inc) {
+                simnum.innerText = INF.format(count + inc);
+                setTimeout(updateCount, delay);
+            } else if (count < end){
+                if (count <= end - 1000) {
+                    count = end - 1000;
+                }
+                let buffer = end - count;
+                if (buffer < 50) {
+                    simnum.setAttribute('delay', delay + Math.floor(100/buffer));
+                }
+                simnum.innerText = INF.format(count + Math.floor(buffer/50) + 1);
+                setTimeout(updateCount, delay);
+            } else {
+                simnum.innerText = INF.format(end);
+            } 
         };
         updateCount();
         // See: https://github.com/alvarotrigo/fullPage.js#vanilla-js-example-with-all-options
