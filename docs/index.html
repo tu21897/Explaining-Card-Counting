@@ -18,16 +18,17 @@
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
 </head>
-<body>
-  <div id="fullpage">
 
+<body>
+
+  <div id="fullpage">
     <section class="section title font-bold">
         <div class="titlesect pb-10">
             <h1 class="maintitle text-6xl">Card Counting<h1>
             <h2 class="subtitle text-xl">Behind The Scenes In:</h2>
         </div>
         <div class = "countsect pb-10">
-            <h2 class="simcount text-4xl">100,000,000</h2>
+            <h2 id='simnum' end="100000000" class="count text-4xl">0</h2>
             <h2 class="simtitle text-base">Simulated Games Of Blackjack</h2>
         </div>
         <div class = "namesect">
@@ -35,7 +36,24 @@
         </div>
     </section>
 
-    <section class="section info active">
+    <script>
+        const updateCount = () => {
+            const simnum = document.getElementById("simnum");
+            const end = parseInt(simnum.getAttribute("end"));
+            const count = parseInt(simnum.innerText.replace(/,/g, ''));
+            const inc = Math.trunc(end / 256);
+            if (count < end) {
+                INF = new Intl.NumberFormat('en-US');
+                simnum.innerText = INF.format(count + inc);
+                setTimeout(updateCount, 7);
+            } else {
+                count.innerText = end;
+            }
+        };
+        updateCount();
+    </script>
+
+    <section class="section info">
         <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Game Information</h2>
         <div class="col text-center">
             <div class="infotitle font-bold text-xl text-red-700">Warning</div>
