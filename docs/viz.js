@@ -20,64 +20,53 @@
         const margin = ({top:10, right:10, bottom:20, left:20});
         const width = 280;
         const height = 700;
+        console.log(data);
+        const xScale = d3.scaleLinear()
+                            .domain([46, 52])
+                            .range([margin.left, width - margin.right]);
 
-        const xScale = d3.scaleBand()
+        const yScale = d3.scaleBand()
                             .domain(data.map(dataPoint => dataPoint['Session ID']))
-                            .rangeRound([margin.left, width])
-                            .padding(0.1);
+                            .range([height - margin.bottom, margin.top]);
 
-        const yScale = d3.scaleLinear()
-                            .domain([40, 60])
-                            .range([height, margin.bottom]);
-
+        // yScale.range([height - margin.bottom, yScale.bandwidth()])
         const vizarea = d3.select('svg')
                             .classed('vizarea', true)
                             .attr('width', width)
-                            .attr('height', height);
-        
-        let color = d3.scaleOrdinal(d3.schemeTableau10).domain(data.map(d => d.key)); 
+                            .attr('height', height)
+                            .style('border', '1px dotted black');
 
+        let color = d3.scaleOrdinal(d3.schemeTableau10); 
         let xMargin = xScale.copy().range([margin.left, width - margin.right]);
-        let yMargin = yScale.copy().range([height - margin.bottom, margin.top]);
+        let yMargin = yScale.copy().range([height - margin.top, margin.bottom]);
 
-        const g = vizarea.selectAll('g')
-        .data(data)
-        .enter() 
-          .append('g')
-            .attr('transform', d => `translate(${margin.left}, ${yMargin(d['Session ID'])})`);
-    
-        g.append('rect')
-            .attr('width', xMargin.bandwidth())
-            .attr('height', d => yMargin(d.value) - yMargin(0))
-            .style('fill', d => color(d.key))
-            .style('stroke', 'white');
-        
-        g.append('text')
-            .attr('x', xMargin.bandwidth())
-            .attr('dx', -20)
-            .attr('dy', '1em')
-            .attr('fill', 'black')
-            .style('font-size', 'small')
-            .text(d => d['Session ID']);
+        vizarea.append('g')
+                .attr('transform', `translate(0, ${height - margin.bottom})`)
+                .call(d3.axisBottom(xMargin));
     
         vizarea.append('g')
-        .attr('transform', `translate(0, ${height - margin.bottom})`)
-        .call(d3.axisBottom(xMargin));
-    
-        vizarea.append('g')
-        .attr('transform', `translate(${margin.left}, 0)`)
-        .call(d3.axisLeft(yMargin));
+                .attr('transform', `translate(${margin.left}, 0)`)
+                .call(d3.axisLeft(yScale));
 
         vizarea.selectAll('.bar')
-            .data(data)
-            .enter()
-            .append('rect')
-            .classed('bar', true)
-            .attr('width', xScale.bandwidth())
-            .attr('height', data => height - margin.bottom - yScale(data['Lifetime winrate (W/L x(Base))']))
-            .attr('x', data => xScale(data['Session ID']))
-            .attr('y', data => yScale(data['Lifetime winrate (W/L x(Base))']))
-            .style('fill', d => color(d.key));
+                .data(data)
+                .enter()
+                .append('circle')
+                .classed('bar', true)
+                .attr('r', 3)
+                .attr('cx', data => xScale(data['Session winrate (W/L x(Base))']))
+                .attr('cy', (data, i) => (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top))
+                .style('fill', d => color());
+
+        vizarea.selectAll('.bar2')
+                .data(data)
+                .enter()
+                .append('circle')
+                .classed('bar2', true)
+                .attr('r', 3)
+                .attr('cx', data => xScale(data['Lifetime winrate (W/L x(Base))']))
+                .attr('cy', (data, i) => (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top))
+                .style('fill', red);
 
         return vizarea.node()
     }
