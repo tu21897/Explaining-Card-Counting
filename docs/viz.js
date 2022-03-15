@@ -11,54 +11,9 @@
   * Initialize the interative elements once the window is loaded.
   */
     function init() {
-        d3.csv('data/test.csv').then(function(data) {
+        d3.csv('data/basic_strategy_data.csv').then(function(data) {
                                     vizgen(data);
                                 });
-    }
-
-    function stdev(start, end, frameCol) {
-        let mean = 0;
-        let variance = 0;
-        let datsum = 0;
-        for (let i = start; i < end; i++) {
-            datsum += frameCol[i];
-        }
-        mean = datsum/end;
-        for (let i = start; i < end; i++) {
-            variance += (frameCol[i] - mean) * (frameCol[i] - mean);
-        }
-        return Math.sqrt(variance/end);
-    }
-
-    function generateCI(zVals, frameCol) {
-        let rCI = [];
-        rCI.push([0, frameCol[0]]);
-        for (let i = 1; i < frameCol.length; i++) {
-            let zVal;
-            if (i >= 100) {
-                zVal = zVals[zVals.length-1]
-            } else if (i >= 90) {
-                zVal = zVals[zVals.length-2]
-            } else if (i >= 80) {
-                zVal = zVals[zVals.length-3]
-            } else if (i >= 70) {
-                zVal = zVals[zVals.length-4]
-            } else if (i >= 60) {
-                zVal = zVals[zVals.length-5]
-            } else if (i >= 50) {
-                zVal = zVals[zVals.length-6]
-            } else if (i >= 40) {
-                zVal = zVals[zVals.length-7]
-            } else if (i >= 30) {
-                zVal = zVals[zVals.length-8]
-            } else {
-                zVal = zVals[i-1]
-            }
-            let std = stdev(0, i + 1, frameCol);
-            let CI = zVal * (std/Math.sqrt(i + 1));
-            rCI.push(CI);
-        }
-        return rCI;
     }
 
     /**
@@ -73,14 +28,9 @@
     }
 
     async function vizgen(data) {
-        const margin = ({top:20, right:5, bottom:46, left:30});
+        const margin = ({top:20, right:5, bottom:46, left:35});
         const width = 280;
         const height = 700;
-
-        const twoTailZVal = [12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228, 2.201,
-            2.179, 2.160, 2.145, 2.131, 2.120, 2.110, 2.101, 2.093, 2.086, 2.080, 2.074,
-            2.069, 2.064, 2.060, 2.056, 2.052, 2.048, 2.045, 2.042, 2.021, 2.009, 2.000,
-            1.994, 1.990, 1.987, 1.984, 1.960];
 
         const vizarea = d3.select('svg')
                             .classed('vizarea', true)
@@ -91,9 +41,9 @@
                             .domain([48, 52])
                             .range([margin.left, width - margin.right]);
 
-        let start = 0;
+        let start = 9800;
         let frameSize = 50;
-        while (start + frameSize < data.length){
+        while (start + frameSize < data.length + 1){
             await delay(0.002);
             vizarea.selectAll("*").remove();
             
@@ -107,57 +57,16 @@
             let xMargin = xScale.copy().range([margin.left, width - margin.right]);
             let yMargin = yScale.copy().range([height - margin.top, margin.bottom]);
 
-            // Make confidence band
-            let rows = [];
-            for (let row = 0; row < data.length; row++) {
-                rows.push({'Session ID': data[row]});
-            }
-            let sessWR = [];
-            let lifeWR =[];
-            for (let i = 0; i < rows.length; i++) {
-                sessWR.push(parseFloat(rows[i]['Session ID']['Session winrate (W/L x(Base))']));
-                lifeWR.push(parseFloat(rows[i]['Session ID']['Lifetime winrate (W/L x(Base))']));
-            }
-
-            let confItvl = generateCI(twoTailZVal, sessWR);
-            let itvlBand = [];
-            for (let i = start; i < start + frameSize; i++) {
-                itvlBand.push([parseFloat(lifeWR[i])- 2 * parseFloat(confItvl[i]), parseFloat(lifeWR[i])+ 2 * parseFloat(confItvl[i])]);
-            }
-
             vizarea.append('path')
                     .datum(frame)
                     .attr('fill', '#ADD8E6')
                     .attr('stroke', 'none')
                     .attr('d', d3.area()
                         .y((frame, i) => {return (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top)})
-                        .x0((frame, i) => { return xScale(itvlBand[i][0])})
-                        .x1((frame, i) => { return xScale(itvlBand[i][1])})
+                        .x0((frame) => { return xScale(frame['Session CI Left'])})
+                        .x1((frame) => { return xScale(frame['Session CI Right'])})
                         .curve(d3.curveMonotoneY)
                         )
-
-            sessWR = [];
-            for (let i = 0; i < rows.length; i++) {
-                sessWR.push(parseFloat(rows[i]['Session ID']['Lifetime winrate (W/L x(Base))']));
-            }
-            confItvl = generateCI(twoTailZVal, lifeWR);
-            itvlBand = [];
-            let meanAll = [];
-            let mean = [sessWR[0]]
-            for (let i = 1; i < sessWR.length; i++) {
-                let datsum = 0;
-                for (let j = 0; j <= i; j++) {
-                    datsum += sessWR[j];
-                }
-                if (i >= start && i < start + frameSize) {
-                    meanAll.push(datsum/(i+1));
-                }
-                mean.push(datsum/(i+1));
-            }
-
-            for (let i = start; i < start + frameSize; i++) {
-                itvlBand.push([parseFloat(mean[i])-parseFloat(confItvl[i]), parseFloat(mean[i])+parseFloat(confItvl[i])]);
-            }
 
             vizarea.append('path')
                     .datum(frame)
@@ -165,8 +74,8 @@
                     .attr('stroke', 'none')
                     .attr('d', d3.area()
                         .y((frame, i) => {return (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top)})
-                        .x0((frame, i) => { return xScale(itvlBand[i][0])})
-                        .x1((frame, i) => { return xScale(itvlBand[i][1])})
+                        .x0((frame) => { return xScale(frame['Lifetime CI Left'])})
+                        .x1((frame) => { return xScale(frame['Lifetime CI Right'])})
                         .curve(d3.curveMonotoneY)
                         )
 
@@ -192,7 +101,7 @@
                     .attr('stroke', 'tomato')
                     .attr('stroke-width', 0.3)
                     .attr('d', d3.line()
-                                    .x((frame, i) => {return xScale(meanAll[i])})
+                                    .x((frame) => {return xScale(frame['Lifetime Mean'])})
                                     .y((frame, i) => {return (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top)})
                                     .curve(d3.curveMonotoneY)
                         );
