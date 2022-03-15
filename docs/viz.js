@@ -73,7 +73,7 @@
     }
 
     async function vizgen(data) {
-        const margin = ({top:10, right:10, bottom:20, left:20});
+        const margin = ({top:20, right:5, bottom:46, left:30});
         const width = 280;
         const height = 700;
 
@@ -88,13 +88,13 @@
                             .attr('height', height);
 
         const xScale = d3.scaleLinear()
-                            .domain([46, 54])
+                            .domain([48, 52])
                             .range([margin.left, width - margin.right]);
 
         let start = 0;
-        let frameSize = 10;
+        let frameSize = 50;
         while (start + frameSize < data.length){
-            await delay(0.04);
+            await delay(0.002);
             vizarea.selectAll("*").remove();
             
             let frame = data.filter(function(d,i){ return i >= start && i < start+frameSize});
@@ -173,11 +173,11 @@
             // Make the axes
             vizarea.append('g')
                     .attr('transform', `translate(0, ${height - margin.bottom})`)
-                    .call(d3.axisBottom(xMargin).ticks(6));
+                    .call(d3.axisBottom(xMargin).ticks(4));
 
             vizarea.append('g')
                     .attr('transform', `translate(0, ${height - margin.bottom})`)
-                    .call(d3.axisBottom(xMargin).tickSize(-(height-margin.top)).tickFormat('').ticks(1))
+                    .call(d3.axisBottom(xMargin).tickSize(-(height-margin.top-margin.bottom)).tickFormat('').ticks(1))
                     .style('stroke-dasharray', '10 10');
 
             vizarea.append('g')
@@ -190,7 +190,7 @@
                     .classed('line', true)
                     .attr('fill', 'none')
                     .attr('stroke', 'tomato')
-                    .attr('stroke-width', 1.25)
+                    .attr('stroke-width', 0.3)
                     .attr('d', d3.line()
                                     .x((frame, i) => {return xScale(meanAll[i])})
                                     .y((frame, i) => {return (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top)})
@@ -202,7 +202,7 @@
                         .classed('line', true)
                         .attr('fill', 'none')
                         .attr('stroke', 'steelblue')
-                        .attr('stroke-width', 1.25)
+                        .attr('stroke-width', 0.3)
                         .attr('d', d3.line()
                                         .x((frame, i) => {return xScale(frame['Lifetime winrate (W/L x(Base))'])})
                                         .y((frame, i) => {return (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top)})
