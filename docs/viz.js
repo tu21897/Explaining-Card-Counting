@@ -11,7 +11,6 @@
   * Initialize the interative elements once the window is loaded.
   */
     function init() {
-
         d3.csv('data/counting_wong_halves_data.csv').then(function(data) {vizgen(data)});
     }
 
@@ -27,7 +26,6 @@
     }
 
     async function vizgen(data) {
-        await delay(3);
         const margin = ({top:20, right:5, bottom:46, left:35});
         const width = 280;
         const height = 600;
@@ -68,17 +66,6 @@
                         .curve(d3.curveMonotoneY)
                         )
 
-            vizarea.append('path')
-                    .datum(frame)
-                    .attr('fill', '#ffcccb')
-                    .attr('stroke', 'none')
-                    .attr('d', d3.area()
-                        .y((frame, i) => {return (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top)})
-                        .x0((frame) => { return xScale(frame['Lifetime CI Left'])})
-                        .x1((frame) => { return xScale(frame['Lifetime CI Right'])})
-                        .curve(d3.curveMonotoneY)
-                        )
-
             // Make the axes
             vizarea.append('g')
                     .attr('transform', `translate(0, ${height - margin.bottom})`)
@@ -110,17 +97,6 @@
                         .text('Number of Sessions');
 
             // Make the mean lines
-            vizarea.append('path')
-                    .datum(frame)
-                    .classed('line', true)
-                    .attr('fill', 'none')
-                    .attr('stroke', 'tomato')
-                    .attr('stroke-width', 0.3)
-                    .attr('d', d3.line()
-                                    .x((frame) => {return xScale(frame['Lifetime Mean'])})
-                                    .y((frame, i) => {return (height-margin.top) - (i*(yMargin.bandwidth()) + yScale.bandwidth()/2 + margin.top)})
-                                    .curve(d3.curveMonotoneY)
-                        );
 
             vizarea.append('path')
                         .datum(frame)

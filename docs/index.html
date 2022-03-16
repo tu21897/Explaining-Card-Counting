@@ -1,221 +1,329 @@
 <!DOCTYPE HTML>
 <html xml:lang="en" lang="en">
 <head>
-  <title>Blackjack Card Counting</title>
+    <title>Blackjack Card Counting</title>
 
-  <!-- tailwindcss https://tailwindcss.com -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- tailwindcss https://tailwindcss.com -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- fullPage https://github.com/alvarotrigo/fullPage.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/vendors/scrolloverflow.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js" integrity="sha512-gSf3NCgs6wWEdztl1e6vUqtRP884ONnCNzCpomdoQ0xXsk06lrxJsR7jX5yM/qAGkPGsps+4bLV5IEjhOZX+gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.css" integrity="sha512-4rPgyv5iG0PZw8E+oRdfN/Gq+yilzt9rQ8Yci2jJ15rAyBmF0HBE4wFjBkoB72cxBeg63uobaj1UcNt/scV93w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- fullPage https://github.com/alvarotrigo/fullPage.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/vendors/scrolloverflow.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js" integrity="sha512-gSf3NCgs6wWEdztl1e6vUqtRP884ONnCNzCpomdoQ0xXsk06lrxJsR7jX5yM/qAGkPGsps+4bLV5IEjhOZX+gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.css" integrity="sha512-4rPgyv5iG0PZw8E+oRdfN/Gq+yilzt9rQ8Yci2jJ15rAyBmF0HBE4wFjBkoB72cxBeg63uobaj1UcNt/scV93w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- D3 https://d3js.org -->
-  <script src="https://d3js.org/d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://d3js.org/d3-scaled.d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  
-  <!-- Visualizations -->
-  <script src="viz.js" defer></script>
+    <!-- D3 https://d3js.org -->
+    <script src="https://d3js.org/d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://d3js.org/d3-scaled.d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- UI -->
+    <script src="ui.js"></script>
+    <!-- Visualizations --> 
+    <script src="viz.js" defer></script>
 
-  <link id='stylesheet' rel='stylesheet' href='./stylesheet.css'/>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
+    <link id='stylesheet' rel='stylesheet' href='./stylesheet.css'/>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
 </head>
 
 <body>
-  <div id="fullpage">
-    <section class="section title font-bold">
-        <div class="titlesect pb-10">
-            <h1 class="maintitle text-6xl">Card Counting<h1>
-            <h2 class="subtitle text-xl">Behind The Scenes In Over:</h2>
-        </div>
-        <div class = "countsect pb-10">
-            <h2 id='simnum' end="100000000" incspeed="10000000" delay="7" class="count text-4xl">0</h2>
-            <h2 class="simtitle text-base">Simulated Games Of Blackjack</h2>
-        </div>
-        <div class = "namesect">
-            <h2 class="simcount text-base">By Tu Nguyen and Eric Banisadr</h2>
-        </div>
-    </section>
+    <div id="fullpage">
+        <section class="section title font-bold">
+            <div class="titlesect pb-10">
+                <h1 class="maintitle text-6xl">Card Counting<h1>
+                <h2 class="subtitle text-xl">Behind The Scenes In Over:</h2>
+            </div>
+            <div class = "countsect pb-10">
+                <h2 id='simnum' end="100000000" incspeed="10000000" delay="7" class="count text-4xl">0</h2>
+                <h2 class="simtitle text-base">Simulated Games Of Blackjack</h2>
+            </div>
+            <div class = "namesect">
+                <h2 class="simcount text-base">By Tu Nguyen and Eric Banisadr</h2>
+            </div>
+        </section>
 
-    <section class="section info">
-        <div id="tooltipnav">What is Blackjack?</div>
-        <div class="slide" data-anchor="slide1">
-            <div class="center">
-                <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Game Strategy</h2>
-                <div class="col text-center">
-                    <div class="infotitle font-bold text-xl text-red-700">Warning</div>
-                    <div class='item font-bold text-red-700'>
-                        <p>Gambling can be highly addictive and can have severe negative consequences. The following simulations & data do NOT account for real life scenarios and should not be used to model them.</p>
+        <section class="section info">
+            <div id="tooltipnav">What is Blackjack?</div>
+            <div class="slide" data-anchor="slide1">
+                <div class="center">
+                    <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Game Strategy</h2>
+                    <div class="col text-center">
+                        <div class="infotitle font-bold text-xl text-red-700">Warning</div>
+                        <div class='item font-bold text-red-700'>
+                            <p>Gambling can be highly addictive and can have severe negative consequences. The following simulations & data do NOT account for real life scenarios and should not be used to model them.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="infotitle font-bold text-xl">Basic strategy</div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Terminology</h1>
-                        <ul class = "terms">
-                            <li><b>Edge - </b> percentage advantage one entity has over another</li>
-                            <li><b>Hard hand - </b> hand with a fixed value</li>
-                            <li><b>Soft hand - </b> hand with an unfixed value, the hand will contain an Ace (A) that is able to be 1 and 11 without busting</li>
-                        </ul>
+                    <div class="col">
+                        <div class="infotitle font-bold text-xl">Basic strategy</div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Terminology</h1>
+                            <ul class = "terms">
+                                <li><b>Edge - </b> percentage advantage one entity has over another</li>
+                                <li><b>Hard hand - </b> hand with a fixed value</li>
+                                <li><b>Soft hand - </b> hand with an unfixed value, the hand will contain an Ace (A) that is able to be 1 and 11 without busting</li>
+                            </ul>
+                        </div>
+                        <div class='item'>
+                            <p>Basic strategy outlines the optimal decisions the player should make given the current game state to maximize return on investment. For example, with a hard hand or soft hand, the player would make the corresponding decision based on the hand and the dealer’s face up card in the decision table. However, even with perfect basic strategy, the house still has a roughly 0.5% edge over the player. This is where card counting comes in.</p>
+                        </div>
                     </div>
-                    <div class='item'>
-                        <p>Basic strategy outlines the optimal decisions the player should make given the current game state to maximize return on investment. For example, with a hard hand or soft hand, the player would make the corresponding decision based on the hand and the dealer’s face up card in the decision table. However, even with perfect basic strategy, the house still has a roughly 0.5% edge over the player. This is where card counting comes in.</p>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="infotitle font-bold text-xl">Counting strategy</div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Terminology</h1>
-                        <ul class = "terms">
-                            <li><b>Count value - </b> value of the card applied to the running count</li>
-                            <li><b>Running count - </b> cumulative sum of seen count values</li>
-                            <li><b>True count - </b> count determined by the running count divided by the number of remaining decks in the shoe</li>
-                            <li><b>Hypergeometric Distribution - </b>“A discrete probability distribution that describes the probability of k successes in n draws without replacement”</li>
-                            <li><b>Bankroll - </b> total amount of money available for the player to bet</li>
-                            <li><b>Bet Spread - </b> range of possible bets sizes by the player</li>
-                            <li><b>Balanced System - </b> all cards are drawn from the shoe, the final running count is 0</li>
-                            <li><b>Unbalanced System - </b> all cards are drawn from the shoe, the final running count is not 0</li>
-                        </ul>
-                    </div>
-                    <div class='item'>
-                        <p>Counting strategy combines basic strategy with card counting in order to place optimal bets based on the game state. Since Blackjack draws are based on a hypergeometric distribution, the player is able to gain an edge over the house by keeping track of played cards and betting accordingly. This is done through associating cards with count values, then updating a running count based on the amount of times those cards have been played. From here, a true count is calculated and used to determine the bet size. Counts are reset after a shuffle.</p>
-                    </div>
-                    <div class='item'>
-                        <p>Bets are determined by a bet spread and the bankroll. The bet spread details the minimum and maximum amount the player can bet. Based on the bankroll, bet spreads are created to maximize the odds of a positive return on investment.</p>
+                    <div class="col">
+                        <div class="infotitle font-bold text-xl">Counting strategy</div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Terminology</h1>
+                            <ul class = "terms">
+                                <li><b>Count value - </b> value of the card applied to the running count</li>
+                                <li><b>Running count - </b> cumulative sum of seen count values</li>
+                                <li><b>True count - </b> count determined by the running count divided by the number of remaining decks in the shoe</li>
+                                <li><b>Hypergeometric Distribution - </b>“A discrete probability distribution that describes the probability of k successes in n draws without replacement”</li>
+                                <li><b>Bankroll - </b> total amount of money available for the player to bet</li>
+                                <li><b>Bet Spread - </b> range of possible bets sizes by the player</li>
+                                <li><b>Balanced System - </b> all cards are drawn from the shoe, the final running count is 0</li>
+                                <li><b>Unbalanced System - </b> all cards are drawn from the shoe, the final running count is not 0</li>
+                            </ul>
+                        </div>
+                        <div class='item'>
+                            <p>Counting strategy combines basic strategy with card counting in order to place optimal bets based on the game state. Since Blackjack draws are based on a hypergeometric distribution, the player is able to gain an edge over the house by keeping track of played cards and betting accordingly. This is done through associating cards with count values, then updating a running count based on the amount of times those cards have been played. From here, a true count is calculated and used to determine the bet size. Counts are reset after a shuffle.</p>
+                        </div>
+                        <div class='item'>
+                            <p>Bets are determined by a bet spread and the bankroll. The bet spread details the minimum and maximum amount the player can bet. Based on the bankroll, bet spreads are created to maximize the odds of a positive return on investment.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="slide" data-anchor="slide2">
-            <div class="center">
-                <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Game Information</h2>
-                <div class="col text-center">
-                    <div class="infotitle font-bold text-xl">What is Blackjack?</div>
-                    <div class='item'>
-                        <p>Blackjack is a popular card game featured in casinos where the player is pitted against the house rather than other players. The primary objective of the game is to have a hand value as close to 21 as possible without going over 21.</p>
+            <div class="slide" data-anchor="slide2">
+                <div class="center">
+                    <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Game Information</h2>
+                    <div class="col text-center">
+                        <div class="infotitle font-bold text-xl">What is Blackjack?</div>
+                        <div class='item'>
+                            <p>Blackjack is a popular card game featured in casinos where the player is pitted against the house rather than other players. The primary objective of the game is to have a hand value as close to 21 as possible without going over 21.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="infotitle font-bold text-xl">How do you play?</div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Card value</h1>
-                        <p>The value of each card in the deck is its corresponding number, ie. 2 is a 2, 7 is a 7, etc. Face cards (J, Q, K) have a value of 10, while Aces (A) have a value of 1 or 11. </p>
-                    </div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Terminology</h1>
-                        <ul class = "terms">
-                            <li><b>Discard - </b>The area where previously played cards go</li>
-                            <li><b>Cut - </b>The point at which the dealer will reshuffle the discard into the shoe</li>
-                            <li><b>Shoe - </b>The card holder with multiple decks in it</li>
-                            <li><b>Hand - </b>A set of 2 or more cards</li>
-                            <li><b>Bust - </b>The value of the hand is over 21, considered a loss with no actions remaining</li>
-                        </ul>
-                    </div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Actions</h1>
-                        <ul class = "terms">
-                            <li><b>Stand - </b>The hand value is held and no more actions can be taken on the hand</li>
-                            <li><b>Hit - </b>Draw a one card from the shoe and add it to total hand value</li>
-                            <li><b>Double Down - </b>When the hand has exactly two cards, up to double your initial bet, then hit once, stand afterwards</li>
-                            <li><b>Split - </b>When the hand has exactly two cards with the same value (all card with a value of 10 are usually considered pairs with each other), split the pair into two hands with one card from the initial pair in each hand</li>
-                            <li><b>Surrender - </b>After the initial draw, the player may forfeit the hand, half of the initial bet is returned</li>
-                            <li><b>Insurance - </b>After the initial draw and if the dealer’s face up card is an Ace (A), the player may place an additional bet up to half of the initial bet that the dealer’s face down card has a value of 10, if correct, double the additional bet is returned</li>
-                        </ul>
-                    </div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Order of play</h1>
-                        <p>Before any cards are dealt, all players must place their initial bet. The dealer then deals cards from the shoe to all players including the dealer. This stops when all players and the dealer have two cards. The dealer will only have one card face up initially. The other card is revealed when all players have finished taking actions. Based on the shown card and the player’s given hand, players will take turns completing actions until they stand or bust on their hand(s). Following this, the dealer will reveal the face down card. If the dealer’s hand value is less than 17, the dealer will hit until they have a hand value of 17 or greater, or they bust.</p>
-                    </div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Shuffling</h1>
-                        <p>If the shoe reaches the cut point, the dealer will reshuffle the discard into the shoe and have a player place the cut point (typically between one to two decks from the bottom of the shoe).</p>
-                    </div>
-                    <div class="infotitle font-bold text-xl">How do you win?</div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Terminology</h1>
-                        <ul class = "terms">
-                            <li><b>Push - </b>The player’s hand value is equal to the dealer’s hand value</li>
-                            <li><b>Blackjack - </b>The initial hand is an Ace (A) and a card with a value of 10</li>
-                            <li><b>Payout - </b>The return value on the initial bet</li>
-                        </ul>
-                    </div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Ways to win</h1>
-                        <ul class ="terms">
-                            <li><b>&spades; </b>The hand has a higher value than the dealer, and it is not a bust</li>
-                            <li><b>&spades; </b>The dealer busts, but the current hand is does not</li>
-                            <li><b>&spades; </b>The initial hand is a Blackjack, and the dealer’s hand was not a Blackjack</li>
-                        </ul>
-                    </div>
-                    <div class='item'>
-                        <p>If the dealer has the same hand value as the player’s hand is it considered a push and the initial bet is returned to the player. All other cases are considered losses.</p>
-                    </div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Payouts</h1>
-                        <ul class ="terms">
-                            <li><b>&clubs; </b>A winning hand pays out 1:1 on the initial bet</li>
-                            <li><b>&clubs; </b>A Blackjack pays 3:2 or 6:5 on the initial bet depending on the casino</li>
-                            <li><b>&clubs; </b>Insurance pays 2:1 on the insurance bet</li>
-                        </ul>
+                    <div class="col">
+                        <div class="infotitle font-bold text-xl">How do you play?</div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Card value</h1>
+                            <p>The value of each card in the deck is its corresponding number, ie. 2 is a 2, 7 is a 7, etc. Face cards (J, Q, K) have a value of 10, while Aces (A) have a value of 1 or 11. </p>
+                        </div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Terminology</h1>
+                            <ul class = "terms">
+                                <li><b>Discard - </b>The area where previously played cards go</li>
+                                <li><b>Cut - </b>The point at which the dealer will reshuffle the discard into the shoe</li>
+                                <li><b>Shoe - </b>The card holder with multiple decks in it</li>
+                                <li><b>Hand - </b>A set of 2 or more cards</li>
+                                <li><b>Bust - </b>The value of the hand is over 21, considered a loss with no actions remaining</li>
+                            </ul>
+                        </div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Actions</h1>
+                            <ul class = "terms">
+                                <li><b>Stand - </b>The hand value is held and no more actions can be taken on the hand</li>
+                                <li><b>Hit - </b>Draw a one card from the shoe and add it to total hand value</li>
+                                <li><b>Double Down - </b>When the hand has exactly two cards, up to double your initial bet, then hit once, stand afterwards</li>
+                                <li><b>Split - </b>When the hand has exactly two cards with the same value (all card with a value of 10 are usually considered pairs with each other), split the pair into two hands with one card from the initial pair in each hand</li>
+                                <li><b>Surrender - </b>After the initial draw, the player may forfeit the hand, half of the initial bet is returned</li>
+                                <li><b>Insurance - </b>After the initial draw and if the dealer’s face up card is an Ace (A), the player may place an additional bet up to half of the initial bet that the dealer’s face down card has a value of 10, if correct, double the additional bet is returned</li>
+                            </ul>
+                        </div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Order of play</h1>
+                            <p>Before any cards are dealt, all players must place their initial bet. The dealer then deals cards from the shoe to all players including the dealer. This stops when all players and the dealer have two cards. The dealer will only have one card face up initially. The other card is revealed when all players have finished taking actions. Based on the shown card and the player’s given hand, players will take turns completing actions until they stand or bust on their hand(s). Following this, the dealer will reveal the face down card. If the dealer’s hand value is less than 17, the dealer will hit until they have a hand value of 17 or greater, or they bust.</p>
+                        </div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Shuffling</h1>
+                            <p>If the shoe reaches the cut point, the dealer will reshuffle the discard into the shoe and have a player place the cut point (typically between one to two decks from the bottom of the shoe).</p>
+                        </div>
+                        <div class="infotitle font-bold text-xl">How do you win?</div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Terminology</h1>
+                            <ul class = "terms">
+                                <li><b>Push - </b>The player’s hand value is equal to the dealer’s hand value</li>
+                                <li><b>Blackjack - </b>The initial hand is an Ace (A) and a card with a value of 10</li>
+                                <li><b>Payout - </b>The return value on the initial bet</li>
+                            </ul>
+                        </div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Ways to win</h1>
+                            <ul class ="terms">
+                                <li><b>&spades; </b>The hand has a higher value than the dealer, and it is not a bust</li>
+                                <li><b>&spades; </b>The dealer busts, but the current hand is does not</li>
+                                <li><b>&spades; </b>The initial hand is a Blackjack, and the dealer’s hand was not a Blackjack</li>
+                            </ul>
+                        </div>
+                        <div class='item'>
+                            <p>If the dealer has the same hand value as the player’s hand is it considered a push and the initial bet is returned to the player. All other cases are considered losses.</p>
+                        </div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Payouts</h1>
+                            <ul class ="terms">
+                                <li><b>&clubs; </b>A winning hand pays out 1:1 on the initial bet</li>
+                                <li><b>&clubs; </b>A Blackjack pays 3:2 or 6:5 on the initial bet depending on the casino</li>
+                                <li><b>&clubs; </b>Insurance pays 2:1 on the insurance bet</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-  <section class='section'>
-    <h2>Effect of card counting on winnings</h2>
-    <div>This will be a graph</div>
-    <p>Maybe a slider or some other c</p>
-    <div class="card red spades">a</div>
-    <div class="card red hearts">10</div>
-    <div class='card black clubs'>8</div>
-    <div class='card back'></div>
-    <p>Test</p>
-  </section>
+        <section class='section viz1'>
+            <div class="center">
+                <div class="card red spades">a</div>
+                <div class="card red hearts">10</div>
+                <div class='card black clubs'>8</div>
+                <div class='card back'></div>
+            </div>
+        </section>
 
-    <section class='section viz2'>
-        <div class="center">
-            <svg></svg>
-        </div>
-    </section>
+        <section class='section viz2 active'>
+            <div class="center">
+                <svg></svg>
+            </div>
+        </section>
 
+        <section class='section datainfo'>
+            <div class="center">
+                <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Data Simulation</h2>
+                <div class="col">
+                    <div class="infotitle font-bold text-xl">Game Settings</div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>General</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Partial Betting</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Dealer Stand On Soft 17</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="infotitle font-bold text-xl">Simulation Process</div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Basic Strategy Simulation</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Counting Strategy Simulation</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="infotitle font-bold text-xl">Potential Errors & Tradeoffs</div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Accounting For Multiple Players</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Fixed Shuffling</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Only Using Balanced Systems</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section design">
+            <div class="center">
+                <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Design Decisions</h2>
+                <div class="col">
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Encoding 1</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Encoding 2</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Encoding 3</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Encoding 4</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Encoding 5</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Encoding 6</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                </div>
+
+                <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Development Process</h2>
+                <div class="col">
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Step 1</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Step 2</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Step 3</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Step 4</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Step 5</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>Step 6</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class='section citations'>
+            <div class="center">
+                <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Citations</h2>
+                <div class="col">
+                    <div class="infotitle font-bold text-xl">Websites</div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>W1</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>W2</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>W3</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="infotitle font-bold text-xl">Papers</div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>P1</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                    <div class='item'>
+                        <h1 class='font-bold text-base text-lg'>P2</h1>
+                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
+
     <script>
-        let updateCount = () => {
-            let simnum = document.getElementById("simnum");
-            let end = parseInt(simnum.getAttribute("end"));
-            let incspeed = parseInt(simnum.getAttribute("incspeed"));
-            let count = parseInt(simnum.innerText.replace(/,/g, ''));
-            let INF = new Intl.NumberFormat('en-US');
-            let delay = parseInt(simnum.getAttribute("delay"));
-            if (incspeed <= 255) {
-                simnum.setAttribute('incspeed', 255);
-            } else {
-                simnum.setAttribute('incspeed', incspeed*.975);
-            }
-            let inc = Math.trunc(end / incspeed)
-            if (count <= end - inc) {
-                simnum.innerText = INF.format(count + inc);
-                setTimeout(updateCount, delay);
-            } else if (count < end){
-                if (count <= end - 1000) {
-                    count = end - 1000;
-                }
-                let buffer = end - count;
-                if (buffer < 50) {
-                    simnum.setAttribute('delay', delay + Math.floor(100/buffer));
-                }
-                simnum.innerText = INF.format(count + Math.floor(buffer/50) + 1);
-                setTimeout(updateCount, delay);
-            } else {
-                simnum.innerText = INF.format(end);
-            } 
-        };
-        updateCount();
         // See: https://github.com/alvarotrigo/fullPage.js#vanilla-js-example-with-all-options
         new fullpage('#fullpage', {
             autoScrolling: true,
@@ -224,28 +332,6 @@
             navigationPosition: 'left',
             navigationTooltips: ['Introduction', 'Demonstration', 'Effectiveness'],
         });
-        let button = document.getElementsByClassName('fp-controlArrow')[0];
-        let button2 = document.getElementsByClassName('fp-controlArrow')[1];
-        let fp = document.getElementById('fp-nav');
-        let ttn = document.getElementById('tooltipnav');
-        button.addEventListener('click', hideshow, false);
-        button2.addEventListener('click', hideshow2, false);
-        function hideshow() {
-            button.style.display = 'none';
-            button2.style.display = 'block';
-            fp.className = 'fp-left';
-            ttn.style.left = null;
-            ttn.style.right = '50px';
-            ttn.innerText = 'What is Blackjack?'
-        };
-        function hideshow2() {
-            button.style.display = 'block';
-            button2.style.display = 'none';
-            fp.className = 'fp-right';
-            ttn.style.right = null;
-            ttn.style.left = '50px';
-            ttn.innerText = 'Game Strategy'
-        };
     </script>
 </body>
 </html> 

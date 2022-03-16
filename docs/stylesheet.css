@@ -76,9 +76,10 @@ a:hover {
 #tooltipnav {
     position: absolute;
     writing-mode: vertical-lr;
+    font-size: 12px;
     text-align: center;
     height: 100vh;
-    right: 50px;
+    right: 32px;
     font-weight: bold;
 }
 
@@ -89,13 +90,14 @@ a:hover {
 .fp-controlArrow.fp-prev {
     display: none;
     left: 15px;
-    width: 0;
-    border-width: 38.5px 34px 38.5px 0;
+    margin-top: -19px;
+    border-width: 19.25px 17px 19.25px 0;
     border-color: transparent black transparent transparent;
 }
 .fp-controlArrow.fp-next {
     right: 15px;
-    border-width: 38.5px 0 38.5px 34px;
+    margin-top: -19px;
+    border-width: 19.25px 0 19.25px 17px;
     border-color: transparent transparent transparent black;
 }
 
