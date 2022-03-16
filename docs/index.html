@@ -14,6 +14,15 @@
     <!-- D3 https://d3js.org -->
     <script src="https://d3js.org/d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://d3js.org/d3-scaled.d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-dispatch@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-ease@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-selection@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-timer@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-transition@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-drag@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-zoom@3"></script>
     
     <!-- UI -->
     <script src="ui.js"></script>
@@ -138,7 +147,7 @@
                         <div class="infotitle font-bold text-xl">How do you win?</div>
                         <div class='item'>
                             <h1 class='font-bold text-base text-lg'>Terminology</h1>
-                            <ul class = "terms">
+                            <ul class="terms">
                                 <li><b>Push - </b>The player’s hand value is equal to the dealer’s hand value</li>
                                 <li><b>Blackjack - </b>The initial hand is an Ace (A) and a card with a value of 10</li>
                                 <li><b>Payout - </b>The return value on the initial bet</li>
@@ -146,7 +155,7 @@
                         </div>
                         <div class='item'>
                             <h1 class='font-bold text-base text-lg'>Ways to win</h1>
-                            <ul class ="terms">
+                            <ul class="terms">
                                 <li><b>&spades; </b>The hand has a higher value than the dealer, and it is not a bust</li>
                                 <li><b>&spades; </b>The dealer busts, but the current hand is does not</li>
                                 <li><b>&spades; </b>The initial hand is a Blackjack, and the dealer’s hand was not a Blackjack</li>
@@ -157,7 +166,7 @@
                         </div>
                         <div class='item'>
                             <h1 class='font-bold text-base text-lg'>Payouts</h1>
-                            <ul class ="terms">
+                            <ul class="terms">
                                 <li><b>&clubs; </b>A winning hand pays out 1:1 on the initial bet</li>
                                 <li><b>&clubs; </b>A Blackjack pays 3:2 or 6:5 on the initial bet depending on the casino</li>
                                 <li><b>&clubs; </b>Insurance pays 2:1 on the insurance bet</li>
@@ -179,7 +188,16 @@
 
         <section class='section viz2 active'>
             <div class="center">
-                <svg></svg>
+                <div class="center2">
+                    <div class='h-8 text-xl' id="simname"></div>
+                    <div class='h-8 text-base' id="simcount"></div>
+                </div>
+                <div class="col2">
+                    <svg id="vizarea"></svg>
+                </div>
+                <div class="col2">
+                    <svg id="interaction"></svg>
+                </div>
             </div>
         </section>
 

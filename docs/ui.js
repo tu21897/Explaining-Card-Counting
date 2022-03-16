@@ -11,7 +11,7 @@
   * Initialize the interative elements once the window is loaded.
   */
     function init() {
-        updateCount();
+        // updateCount();
         
         let button = document.getElementsByClassName('fp-controlArrow')[0];
         let button2 = document.getElementsByClassName('fp-controlArrow')[1];
