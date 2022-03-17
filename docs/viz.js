@@ -48,7 +48,13 @@
 
     async function vizgen(frame, text, button) {
         const margin = ({top:5, right:10, bottom:20, left:35, graph:5.8});
-        const width = 300;
+        const width = (Math.max(
+    document.body.scrollWidth,
+    document.documentElement.scrollWidth,
+    document.body.offsetWidth,
+    document.documentElement.offsetWidth,
+    document.documentElement.clientWidth
+  ) >= 700) ? 700 : 300;
         const height = 450;
         const INF = new Intl.NumberFormat('en-US');
 
