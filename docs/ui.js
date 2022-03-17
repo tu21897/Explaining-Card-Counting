@@ -11,7 +11,7 @@
   * Initialize the interative elements once the window is loaded.
   */
     function init() {
-        // updateCount();
+        updateCount();
         
         let button = document.getElementsByClassName('fp-controlArrow')[0];
         let button2 = document.getElementsByClassName('fp-controlArrow')[1];
@@ -49,7 +49,7 @@
         if (incspeed <= 255) {
             simnum.setAttribute('incspeed', 255);
         } else {
-            simnum.setAttribute('incspeed', incspeed*.975);
+            simnum.setAttribute('incspeed', incspeed*.96);
         }
         let inc = Math.trunc(end / incspeed)
         if (count <= end - inc) {

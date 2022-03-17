@@ -14,15 +14,6 @@
     <!-- D3 https://d3js.org -->
     <script src="https://d3js.org/d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://d3js.org/d3-scaled.d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-dispatch@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-ease@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-selection@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-timer@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-transition@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-drag@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-zoom@3"></script>
     
     <!-- UI -->
     <script src="ui.js"></script>
@@ -177,16 +168,16 @@
             </div>
         </section>
 
-        <section class='section viz1'>
+        <!-- <section class='section viz1'>
             <div class="center">
                 <div class="card red spades">a</div>
                 <div class="card red hearts">10</div>
                 <div class='card black clubs'>8</div>
                 <div class='card back'></div>
             </div>
-        </section>
+        </section> -->
 
-        <section class='section viz2 active'>
+        <section class='section viz2'>
             <div class="center">
                 <div class="center2">
                     <div class='h-8 text-xl' id="simname"></div>
@@ -196,7 +187,33 @@
                     <svg id="vizarea"></svg>
                 </div>
                 <div class="col2">
-                    <svg id="interaction"></svg>
+                    <div class="infotitle font-bold text-base pt-2">Strategy</div>
+                    <form>
+                        <select class='w-full text-sm' id = "dropdown">
+                            <option>Basic Strategy</option>
+                            <option>Hi-Lo Counting Strategy</option>
+                            <option>Hi-Opt 1 Counting Strategy</option>
+                            <option>Hi-Opt 2 Counting Strategy</option>
+                            <option>Omega 2 Counting Strategy</option>
+                            <option>Zen Count Counting Strategy</option>
+                            <option>Halves Counting Strategy</option>
+                            <option>Wong Halves Counting Strategy</option>
+                            <option>Silver Fox Counting Strategy</option>
+                            <option>Revere Point Count Counting Strategy</option>
+                            <option>Canfield Expert Counting Strategy</option>
+                        </select>
+                        <button id="button" type="button">Start Animation</button>
+                        <style>
+                            #button {
+                                margin-top: 5px;
+                                background-color: steelblue;
+                                color: black;
+                                font-weight: bold;
+                                border-radius: 10px;
+                                width: 100%;
+                            }
+                        </style>
+                    </form>
                 </div>
             </div>
         </section>
