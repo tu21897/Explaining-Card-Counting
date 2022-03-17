@@ -49,7 +49,7 @@
     async function vizgen(frame, text, button) {
         const margin = ({top:5, right:10, bottom:20, left:35, graph:5.8});
         const width = 300;
-        const height = 470;
+        const height = 450;
         const INF = new Intl.NumberFormat('en-US');
 
         const vizarea = d3.select('#vizarea')

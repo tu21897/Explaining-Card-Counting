@@ -180,15 +180,15 @@
         <section class='section viz2'>
             <div class="center2">
                 <div class="col2">
-                    <div class='h-8 text-xl' id="simname"></div>
-                    <div class='h-8 text-base' id="simcount"></div>
+                    <div class='w-full h-8 text-xl' id="simname"></div>
+                    <div class='w-full h-8 text-base' id="simcount"></div>
                 </div>
                 <div class="col2">
                     <svg id="vizarea"></svg>
                 </div>
                 <div class="col2">
-                    <div class="infotitle font-bold text-base pt-0.5">Strategy</div>
-                    <form>
+                    <div class="infotitle w-3/4 font-bold text-base pt-0.5">Strategy</div>
+                    <form class="w-3/4">
                         <select class='w-full text-sm' id = "dropdown">
                             <option>Basic Strategy</option>
                             <option>Hi-Lo Counting Strategy</option>
@@ -202,17 +202,18 @@
                             <option>Revere Point Count Counting Strategy</option>
                             <option>Canfield Expert Counting Strategy</option>
                         </select>
-                        <button id="button" type="button">Start Animation</button>
-                        <style>
-                            #button {
-                                background-color: steelblue;
-                                color: black;
-                                font-weight: bold;
-                                border-radius: 10px;
-                                width: 100%;
-                            }
-                        </style>
                     </form>
+                    <button id="button" type="button">Start Animation</button>
+                    <style>
+                        #button {
+                            margin-top: 5px;
+                            background-color: steelblue;
+                            color: black;
+                            font-weight: bold;
+                            border-radius: 10px;
+                            width: 75%;
+                        }
+                    </style>
                 </div>
             </div>
         </section>
