@@ -13,11 +13,6 @@
     --card-width: 100px;
 }
 
-/* Desktop/wide browsers */
-@media(min-width: 700px) { :root {
-    --card-width: 150px;
-}}
-
 * {
     box-sizing: border-box;
 }
@@ -213,3 +208,20 @@ a:hover {
 .black {
     color: var(--black);
 }
+
+#vizarea {
+    width: 300px;
+}
+
+/* Desktop/wide browsers */
+@media(min-width: 700px) {
+    :root {
+        --card-width: 150px;
+
+    }
+
+    #vizarea {
+        width: 700px;
+    }
+}
+
