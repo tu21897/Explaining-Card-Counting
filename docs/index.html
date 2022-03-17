@@ -74,11 +74,11 @@
                                 <li><b>Count value - </b>The value of the card applied to the running count</li>
                                 <li><b>Running count - </b> The cumulative sum of seen count values</li>
                                 <li><b>True count - </b> The count determined by the running count divided by the number of remaining decks in the shoe</li>
-                                <li><b>Hypergeometric Distribution - </b>“A discrete probability distribution that describes the probability of k successes in n draws without replacement”</li>
+                                <li><b>Hypergeometric distribution - </b>“A discrete probability distribution that describes the probability of k successes in n draws without replacement”</li>
                                 <li><b>Bankroll - </b> The total amount of money available for the player to bet</li>
-                                <li><b>Bet Spread - </b>The range of possible bets sizes by the player</li>
-                                <li><b>Balanced System - </b> When all cards are drawn from the shoe, the final running count is 0</li>
-                                <li><b>Unbalanced System - </b> When all cards are drawn from the shoe, the final running count is not 0</li>
+                                <li><b>Bet spread - </b>The range of possible bets sizes by the player</li>
+                                <li><b>Balanced system - </b> When all cards are drawn from the shoe, the final running count is 0</li>
+                                <li><b>Unbalanced system - </b> When all cards are drawn from the shoe, the final running count is not 0</li>
                             </ul>
                         </div>
                         <div class='item'>
@@ -121,7 +121,7 @@
                             <ul class = "terms">
                                 <li><b>Stand - </b>The hand value is held and no more actions can be taken on the hand</li>
                                 <li><b>Hit - </b>Draw a one card from the shoe and add it to total hand value</li>
-                                <li><b>Double Down - </b>When the hand has exactly two cards, up to double your initial bet, then hit once, stand afterwards</li>
+                                <li><b>Double down - </b>When the hand has exactly two cards, up to double your initial bet, then hit once, stand afterwards</li>
                                 <li><b>Split - </b>When the hand has exactly two cards with the same value (all card with a value of 10 are usually considered pairs with each other), split the pair into two hands with one card from the initial pair in each hand</li>
                                 <li><b>Surrender - </b>After the initial draw, the player may forfeit the hand, half of the initial bet is returned</li>
                                 <li><b>Insurance - </b>After the initial draw and if the dealer’s face up card is an Ace (A), the player may place an additional bet up to half of the initial bet that the dealer’s face down card has a value of 10, if correct, double the additional bet is returned</li>
@@ -218,48 +218,61 @@
             </div>
         </section>
 
-        <section class='section datainfo'>
+        <section class='section datainfo active'>
             <div class="center">
                 <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Data Generation</h2>
                 <div class="col">
                     <div class="infotitle font-bold text-xl">Game Settings</div>
-                    <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>General</h1>
-                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                    <h1 class='font-bold text-base text-lg'>General</h1>
+                    <div class="row">
+                            <ul class = "terms w-1/2 text-[8px]">
+                                <li><b>Double on split - </b>Enabled</li>
+                                <li><b>Max splits - </b>3 splits</li>
+                                <li><b>Surrender - </b>Disabled</li>
+                                <li><b>Insurance - </b>Disabled</li>
+                                <li><b>Deck penetration - </b>5 decks</li>
+                            </ul>
+                            <ul class = "terms w-1/2 text-[8px]">
+                                <li><b>Number of decks - </b>6 decks</li>
+                                <li><b>Insurance - </b>Disabled</li>
+                                <li><b>Hits after ace - </b>1 hit</li>
+                                <li><b>Blackjack payout - </b>3:2 payout</li>
+                                <li><b>Games in session - </b>1000 games</li>
+                            </ul>
                     </div>
                     <div class='item'>
                         <h1 class='font-bold text-base text-lg'>Partial Betting</h1>
-                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                        <p>In order to speed up simulations, partial betting was enabled. This is not accurate representation of betting</p>
                     </div>
                     <div class='item'>
-                        <h1 class='font-bold text-base text-lg'>Dealer Stand On Soft 17</h1>
-                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                        <h1 class='font-bold text-base text-lg'>Dealer Stand on Soft 17</h1>
+                        <p>In the simulations, the dealer stands on a soft 17. This is a small advantage for the player.</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="infotitle font-bold text-xl">Simulation Process</div>
                     <div class='item'>
                         <h1 class='font-bold text-base text-lg'>Basic Strategy Simulation</h1>
-                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                        <p>For the basic strategy simulations, decisions were basic off tested and proven basic strategy charts.</p>
                     </div>
                     <div class='item'>
                         <h1 class='font-bold text-base text-lg'>Counting Strategy Simulation</h1>
-                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                        <p>For the counting strategy simulations, decisions were based off of basic strategy. Bet sizing is based off of true count - 1. Counting systems with associated card count values were provided by Bet and Beat.</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="infotitle font-bold text-xl">Potential Errors & Tradeoffs</div>
                     <div class='item'>
                         <h1 class='font-bold text-base text-lg'>Accounting For Multiple Players</h1>
-                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                        <p></p>
                     </div>
                     <div class='item'>
                         <h1 class='font-bold text-base text-lg'>Fixed Shuffling</h1>
-                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                        <p></p>
                     </div>
                     <div class='item'>
                         <h1 class='font-bold text-base text-lg'>Only Using Balanced Systems</h1>
-                        <p>Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya Ayaya </p>
+                        <p></p>
                     </div>
                 </div>
             </div>
@@ -292,7 +305,7 @@
                     </div>
                     <div class='item'>
                         <h1 class='font-bold text-base text-lg'>The Probability Behind Blackjack</h1>
-                        <p>Blanchard, Hanna, "Blackjack: the math behind the cards" (2019).<i> Louisiana Tech University</i></p>
+                        <p>Blanchard, Hanna, "Blackjack: the math behind the cards" (2019).<i> Louisiana Tech University.</i></p>
                     </div>
                 </div>
             </div>

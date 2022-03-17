@@ -92,6 +92,15 @@ a:hover {
     width: 75vw;
 }
 
+.row {
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-bottom: 2vh;
+    width: 75vw;
+}
+
 #tooltipnav {
     position: absolute;
     writing-mode: vertical-lr;
