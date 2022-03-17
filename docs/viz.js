@@ -32,7 +32,7 @@
             d3.csv('data/' + strategies[text] + '_data.csv').then(function(data) {vizgen(data, text, button)});
             button.style.display = 'none';
         }
-        d3.csv('data/' + strategies[text] + '_data.csv').then(function(data) {vizgen(data.slice(1, 51), text)});
+        d3.csv('data/' + strategies[text] + '_data.csv').then(function(data) {vizgen(data.slice(1, 31), text)});
     }
 
     /**
@@ -49,7 +49,7 @@
     async function vizgen(frame, text, button) {
         const margin = ({top:5, right:10, bottom:20, left:35, graph:5.8});
         const width = 300;
-        const height = 600;
+        const height = 520;
         const INF = new Intl.NumberFormat('en-US');
 
         const vizarea = d3.select('#vizarea')
@@ -58,15 +58,11 @@
         
         const simname = d3.select('#simname')
                             .style('width', width)
-                            .style('height', 70);
+                            .style('height', 40);
         
         const simcount = d3.select('#simcount')
                             .style('width', width)
                             .style('height', 10);
-        
-        const interaction = d3.select('#interaction')
-                            .attr('width', width)
-                            .attr('height', 100);
 
         const xScale = d3.scaleLinear()
                             .domain([47,53])
@@ -82,7 +78,7 @@
         
         let start = 0;
         let speed = 1;
-        let dataSize = 50;
+        let dataSize = 30;
         let data = frame.slice(start, start + dataSize);
 
         while (start + dataSize < frame.length) {
