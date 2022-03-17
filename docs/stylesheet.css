@@ -94,10 +94,10 @@ a:hover {
 #tooltipnav {
     position: absolute;
     writing-mode: vertical-lr;
-    font-size: 12px;
+    font-size: 8px;
     text-align: center;
     height: 100vh;
-    right: 32px;
+    right: 27px;
     font-weight: bold;
 }
 
@@ -107,16 +107,24 @@ a:hover {
 
 .fp-controlArrow.fp-prev {
     display: none;
-    left: 15px;
+    left: 10px;
     margin-top: -19px;
     border-width: 19.25px 17px 19.25px 0;
     border-color: transparent black transparent transparent;
 }
 .fp-controlArrow.fp-next {
-    right: 15px;
+    right: 10px;
     margin-top: -19px;
     border-width: 19.25px 0 19.25px 17px;
     border-color: transparent transparent transparent black;
+}
+
+.fp-left {
+    left: 9px!important;
+}
+
+.fp-right {
+    right: 9px!important;
 }
 
 .fp-tooltip {

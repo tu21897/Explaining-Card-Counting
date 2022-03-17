@@ -25,7 +25,7 @@
             button2.style.display = 'block';
             fp.className = 'fp-left';
             ttn.style.left = null;
-            ttn.style.right = '32px';
+            ttn.style.right = '27px';
             ttn.innerText = 'What is Blackjack?';
         };
         
@@ -34,7 +34,7 @@
             button2.style.display = 'none';
             fp.className = 'fp-right';
             ttn.style.right = null;
-            ttn.style.left = '32px';
+            ttn.style.left = '27px';
             ttn.innerText = 'Game Strategy';
         };
     }
