@@ -18,7 +18,7 @@
     <!-- UI -->
     <script src="ui.js"></script>
     <!-- Visualizations --> 
-    <script src="viz.js" defer></script>
+    <script src="vis2.js" defer></script>
 
     <link id='stylesheet' rel='stylesheet' href='./stylesheet.css'/>
     <meta charset='utf-8'>
@@ -50,6 +50,13 @@
                         <div class="infotitle font-bold text-xl text-red-700">Warning</div>
                         <div class='item font-bold text-red-700'>
                             <p>Gambling can be highly addictive and can have severe negative consequences. The following simulations & data do NOT account for real life scenarios and should not be used to model them.</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="infotitle font-bold text-xl">Ayaya</div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Ayaya</h1>
+                            <p>Ayaya</p>
                         </div>
                     </div>
                 </div>
@@ -141,6 +148,7 @@
                                 <li><b>Soft hand - </b> hand with an unfixed value, the hand will contain an Ace (A) that is able to be 1 and 11 without busting</li>
                             </ul>
                         </div>
+                        <h1 class='font-bold text-base text-lg'>General</h1>
                         <div class='item'>
                             <p>Basic strategy outlines the optimal decisions the player should make given the current game state to maximize return on investment. For example, with a hard hand or soft hand, the player would make the corresponding decision based on the hand and the dealer’s face up card in the decision table. However, even with perfect basic strategy, the house still has a roughly 0.5% edge over the player. This is where card counting comes in.</p>
                         </div>
@@ -160,9 +168,11 @@
                                 <li><b>Unbalanced system - </b> When all cards are drawn from the shoe, the final running count is not 0</li>
                             </ul>
                         </div>
+                        <h1 class='font-bold text-base text-lg'>General</h1>
                         <div class='item'>
                             <p>Counting strategy combines basic strategy with card counting in order to place optimal bets based on the game state. Since Blackjack draws are based on a hypergeometric distribution, the player is able to gain an edge over the house by keeping track of played cards and betting accordingly. This is done through associating cards with count values, then updating a running count based on the amount of times those cards have been played. From here, a true count is calculated and used to determine the bet size. Counts are reset after a shuffle.</p>
                         </div>
+                        <h1 class='font-bold text-base text-lg'>Betting</h1>
                         <div class='item'>
                             <p>Bets are determined by a bet spread and the bankroll. The bet spread details the minimum and maximum amount the player can bet. Based on the bankroll, bet spreads are created to maximize the odds of a positive return on investment.</p>
                         </div>
@@ -171,7 +181,7 @@
             </div>
         </section>
 
-        <section class='section viz1'>
+        <section class='section vis1'>
             <div class="center">
                 <div class="card red spades">a</div>
                 <div class="card red hearts">10</div>
@@ -180,7 +190,7 @@
             </div>
         </section>
 
-        <section class='section viz2'>
+        <section class='section vis2'>
             <div class="center2">
                 <div class="col2">
                     <div class='w-full h-8 text-xl' id="simname"></div>
