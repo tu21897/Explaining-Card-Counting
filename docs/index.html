@@ -41,57 +41,22 @@
             </div>
         </section>
 
-        <section class="section info">
+        <section class="section info active">
             <div id="tooltipnav">What is Blackjack?</div>
             <div class="slide" data-anchor="slide1">
-                <div class="center">
-                    <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Game Strategy</h2>
+                <div class="center2">
+                    <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Preface</h2>
                     <div class="col text-center">
                         <div class="infotitle font-bold text-xl text-red-700">Warning</div>
                         <div class='item font-bold text-red-700'>
                             <p>Gambling can be highly addictive and can have severe negative consequences. The following simulations & data do NOT account for real life scenarios and should not be used to model them.</p>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="infotitle font-bold text-xl">Basic strategy</div>
-                        <div class='item'>
-                            <h1 class='font-bold text-base text-lg'>Terminology</h1>
-                            <ul class = "terms">
-                                <li><b>Edge - </b> percentage advantage one entity has over another</li>
-                                <li><b>Hard hand - </b> hand with a fixed value</li>
-                                <li><b>Soft hand - </b> hand with an unfixed value, the hand will contain an Ace (A) that is able to be 1 and 11 without busting</li>
-                            </ul>
-                        </div>
-                        <div class='item'>
-                            <p>Basic strategy outlines the optimal decisions the player should make given the current game state to maximize return on investment. For example, with a hard hand or soft hand, the player would make the corresponding decision based on the hand and the dealer’s face up card in the decision table. However, even with perfect basic strategy, the house still has a roughly 0.5% edge over the player. This is where card counting comes in.</p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="infotitle font-bold text-xl">Counting strategy</div>
-                        <div class='item'>
-                            <h1 class='font-bold text-base text-lg'>Terminology</h1>
-                            <ul class = "terms">
-                                <li><b>Count value - </b>The value of the card applied to the running count</li>
-                                <li><b>Running count - </b> The cumulative sum of seen count values</li>
-                                <li><b>True count - </b> The count determined by the running count divided by the number of remaining decks in the shoe</li>
-                                <li><b>Hypergeometric distribution - </b>“A discrete probability distribution that describes the probability of k successes in n draws without replacement”</li>
-                                <li><b>Bankroll - </b> The total amount of money available for the player to bet</li>
-                                <li><b>Bet spread - </b>The range of possible bets sizes by the player</li>
-                                <li><b>Balanced system - </b> When all cards are drawn from the shoe, the final running count is 0</li>
-                                <li><b>Unbalanced system - </b> When all cards are drawn from the shoe, the final running count is not 0</li>
-                            </ul>
-                        </div>
-                        <div class='item'>
-                            <p>Counting strategy combines basic strategy with card counting in order to place optimal bets based on the game state. Since Blackjack draws are based on a hypergeometric distribution, the player is able to gain an edge over the house by keeping track of played cards and betting accordingly. This is done through associating cards with count values, then updating a running count based on the amount of times those cards have been played. From here, a true count is calculated and used to determine the bet size. Counts are reset after a shuffle.</p>
-                        </div>
-                        <div class='item'>
-                            <p>Bets are determined by a bet spread and the bankroll. The bet spread details the minimum and maximum amount the player can bet. Based on the bankroll, bet spreads are created to maximize the odds of a positive return on investment.</p>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="slide" data-anchor="slide2">
+                <!-- Game Information -->
                 <div class="center">
                     <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Game Information</h2>
                     <div class="col text-center">
@@ -100,7 +65,7 @@
                             <p>Blackjack is a popular card game featured in casinos where the player is pitted against the house rather than other players. The primary objective of the game is to have a hand value as close to 21 as possible without going over 21.</p>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col pb-0">
                         <div class="infotitle font-bold text-xl">How do you play?</div>
                         <div class='item'>
                             <h1 class='font-bold text-base text-lg'>Card value</h1>
@@ -155,7 +120,7 @@
                         <div class='item'>
                             <p>If the dealer has the same hand value as the player’s hand is it considered a push and the initial bet is returned to the player. All other cases are considered losses.</p>
                         </div>
-                        <div class='item'>
+                        <div class='item pb-0'>
                             <h1 class='font-bold text-base text-lg'>Payouts</h1>
                             <ul class="terms">
                                 <li><b>&clubs; </b>A winning hand pays out 1:1 on the initial bet</li>
@@ -164,18 +129,56 @@
                             </ul>
                         </div>
                     </div>
+                    <!-- Game Strategy -->
+                    <h2 class="subtitle w-3/4 font-bold text-4xl px-7 pb-7 pt-3">Game Strategy</h2>
+                    <div class="col">
+                        <div class="infotitle font-bold text-xl">Basic strategy</div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Terminology</h1>
+                            <ul class = "terms">
+                                <li><b>Edge - </b> percentage advantage one entity has over another</li>
+                                <li><b>Hard hand - </b> hand with a fixed value</li>
+                                <li><b>Soft hand - </b> hand with an unfixed value, the hand will contain an Ace (A) that is able to be 1 and 11 without busting</li>
+                            </ul>
+                        </div>
+                        <div class='item'>
+                            <p>Basic strategy outlines the optimal decisions the player should make given the current game state to maximize return on investment. For example, with a hard hand or soft hand, the player would make the corresponding decision based on the hand and the dealer’s face up card in the decision table. However, even with perfect basic strategy, the house still has a roughly 0.5% edge over the player. This is where card counting comes in.</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="infotitle font-bold text-xl">Counting strategy</div>
+                        <div class='item'>
+                            <h1 class='font-bold text-base text-lg'>Terminology</h1>
+                            <ul class = "terms">
+                                <li><b>Count value - </b>The value of the card applied to the running count</li>
+                                <li><b>Running count - </b> The cumulative sum of seen count values</li>
+                                <li><b>True count - </b> The count determined by the running count divided by the number of remaining decks in the shoe</li>
+                                <li><b>Hypergeometric distribution - </b>“A discrete probability distribution that describes the probability of k successes in n draws without replacement”</li>
+                                <li><b>Bankroll - </b> The total amount of money available for the player to bet</li>
+                                <li><b>Bet spread - </b>The range of possible bets sizes by the player</li>
+                                <li><b>Balanced system - </b> When all cards are drawn from the shoe, the final running count is 0</li>
+                                <li><b>Unbalanced system - </b> When all cards are drawn from the shoe, the final running count is not 0</li>
+                            </ul>
+                        </div>
+                        <div class='item'>
+                            <p>Counting strategy combines basic strategy with card counting in order to place optimal bets based on the game state. Since Blackjack draws are based on a hypergeometric distribution, the player is able to gain an edge over the house by keeping track of played cards and betting accordingly. This is done through associating cards with count values, then updating a running count based on the amount of times those cards have been played. From here, a true count is calculated and used to determine the bet size. Counts are reset after a shuffle.</p>
+                        </div>
+                        <div class='item'>
+                            <p>Bets are determined by a bet spread and the bankroll. The bet spread details the minimum and maximum amount the player can bet. Based on the bankroll, bet spreads are created to maximize the odds of a positive return on investment.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- <section class='section viz1'>
+        <section class='section viz1'>
             <div class="center">
                 <div class="card red spades">a</div>
                 <div class="card red hearts">10</div>
                 <div class='card black clubs'>8</div>
                 <div class='card back'></div>
             </div>
-        </section> -->
+        </section>
 
         <section class='section viz2'>
             <div class="center2">
@@ -218,7 +221,7 @@
             </div>
         </section>
 
-        <section class='section datainfo active'>
+        <section class='section datainfo'>
             <div class="center">
                 <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Data Generation</h2>
                 <div class="col">

@@ -35,7 +35,7 @@
             fp.className = 'fp-right';
             ttn.style.right = null;
             ttn.style.left = '27px';
-            ttn.innerText = 'Game Strategy';
+            ttn.innerText = 'Preface';
         };
     }
 
