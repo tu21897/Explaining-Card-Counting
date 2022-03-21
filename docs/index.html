@@ -15,14 +15,10 @@
     <script src="https://d3js.org/d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://d3js.org/d3-scaled.d3.v7.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
-    <script src="sim.js"></script>
-
     <!-- UI -->
     <script src="ui.js"></script>
     <!-- Visualizations --> 
     <script src="viz.js" defer></script>
-    <script src="strat.js" defer></script>
-    <script src="demo.js" defer></script>
 
     <link id='stylesheet' rel='stylesheet' href='./stylesheet.css'/>
     <meta charset='utf-8'>
@@ -172,163 +168,14 @@
             </div>
         </section>
 
-        <!-- Card counting demo -->
-        <section class='section'>
-          <div class='absolute top-3 right-2'>
-            <div class='flex flex-row justify-end'>
-              <button id='settings-toggle' class='bg-sky-400 py-1 px-2 rounded hover:bg-sky-700' type="button"
-                  onclick="document.getElementById('settings').classList.toggle('hidden')">
-                Game Settings
-              </button>
+        <!-- <section class='section viz1'>
+            <div class="center">
+                <div class="card red spades">a</div>
+                <div class="card red hearts">10</div>
+                <div class='card black clubs'>8</div>
+                <div class='card back'></div>
             </div>
-            <div id='settings' class='hidden m-2 border-solid border-2 border-indigo-600 rounded bg-white p-1'>
-              <h3 class="text-lg font-bold">
-                Options
-              </h3>
-              <div>
-                <label for='strategy-input'>
-                  Strategy
-                </label>
-                <span class='text-slate-600'>High-low</span>
-              </div>
-              <div>
-                <label for='decks-input'>
-                  Number of decks </label> <input type="range" id="decks-input" min="1" max="8" value="6" oninput="(v => document.getElementById('decks-text-input').value = v)(value)">
-                <input type='number' id='decks-text-input' min='1' max='8' value='6' oninput="(v => document.getElementById('decks-input').value = v)(value)">
-              </div>
-              <div>
-                <label for='shuffle-input'>
-                  Decks played before shuffle
-                </label>
-                <input type="range" id="shuffle-input" min="1" max="8" value="5" oninput="(v => document.getElementById('shuffle-text-input').value = v)(value)">
-                <input type='number' id='shuffle-text-input' min='1' max='8' value='5' oninput="(v => document.getElementById('shuffle-input').value = v)(value)">
-              </div>
-              <div>
-                <label for='bet-input'>
-                  Base bet unit
-                </label>
-                <input type='number' id='bet-input' min='1' value='5' oninput="(v => window.demo.recalculateStats())(value)">
-              </div>
-              <div>
-                <label for="surrender-input">
-                  Enable surrender?
-                </label>
-                <input type="checkbox" id="surrender-input" class=""/>
-              </div>
-              <!-- TODO: blackjack pays 3:2 vs 6:5 -->
-            </div>
-          </div>
-          <div class='flex flex-row items-center'><!-- TODO: center horizontally on mobile -->
-            <div class='inline-block flex flex-row flex-wrap mx-auto'>
-              <div class='inline-block flex mt-4 pl-4'>
-                <div class='mr-8'>
-                  <h2 class="text-2xl font-bold">
-                    Try it yourself
-                  </h2>
-                  <p class='' style='max-width: 400px;'>
-                    Use the buttons to flip over some cards. The stats below will update to show
-                    how the count changes and how you should change your play based on the new info.
-                  </p>
-                  <table class='table-fixed p-2 my-auto' style='max-height: 100px'>
-                    <tr>
-                      <td class='p-1'>
-                        <button class='bg-green-400 py-1 px-2 rounded hover:bg-green-700' type="button"
-                            onClick="window.demo.spawnCard()">
-                          Flip a card
-                        </button>
-                      </td>
-                      <td class='p-1'>
-                        <button class='bg-green-400 py-1 px-2 rounded hover:bg-green-700' type="button"
-                            onClick="for (let x = 0; x < 10; x++) window.demo.spawnCard()">
-                          Flip ten cards
-                        </button>
-                      </td class='p-1'>
-                      <td>
-                        <button class='bg-green-400 py-1 px-2 rounded hover:bg-green-700' type="button"
-                            onClick="window.demo.resetDeck()">
-                          Shuffle
-                        </button>
-                      </td>
-                    </tr>
-                  </table>
-                  <table>
-                    <tr>
-                      <td class='p-1 font-bold'>Running count</td>
-                      <td class='p-1 font-bold'>Decks remaining</td>
-                      <td class='p-1 font-bold'>True count</td>
-                    </tr>
-                    <tr>
-                      <td id='demo-rc' class='p-1'>0</td>
-                      <td id='demo-dr' class='p-1'>0</td>
-                      <td id='demo-tc' class='p-1'>0</td>
-                    </tr>
-                  </table>
-                  <h3 class="text-l font-bold">
-                    Bet Sizing
-                  </h3>
-                  <p class='' style='max-width: 400px;'>
-                    There's no one correct way to size bets, but the underlying principle is that one should bet
-                    larger amounts when they have a larger edge over the house (<em>i.e.</em> when the true count is
-                    high). Here we suggest a $0 bet when the true count is less than 1, which corresponds to hands
-                    the player should sit out or bet the minimum. Otherwise, we suggest betting the base unit
-                    multiplied by the true count.
-                  </p>
-                  <br />
-                  <p class=""><strong>Base bet unit</strong>: $<span id='demo-bet-unit'>5</span></p>
-                  <p class=""><strong>Suggested bet</strong>: $<span id='demo-bet'>5</span></p>
-                </div>
-              </div>
-              <div class='inline-grid gap-4 grid-cols-3 grid-rows-6 p-2'>
-                <div class='col-start-1 row-span-2 self-center'>
-                  <div class='card'>+1</div>
-                </div>
-                <div class='col-start-1 row-span-2 self-center justify-self-end'>
-                  <div class='card'>0</div>
-                </div>
-                <div class='col-start-1 row-span-2 self-center'>
-                  <div class='card'>-1</div>
-                </div>
-                <div class='col-start-3 row-start-1 row-span-3 self-center'>
-                  <div class='card back'></div>
-                  <br />
-                  <div><span id='demo-cr' style='display: table;margin: 0 auto;' class="text-lg pt-1">0</span></div>
-                </div>
-                <div class='col-start-3 row-start-4 row-span-3 self-center'>
-                  <div id='demo-card' class='card'></div>
-                </div>
-                <div class='col-start-2 col-span-1 row-start-1 row-span-6 self-center' style='max-width: var(--card-width)'>
-                  <svg id='arrow-plus1' height="350" width="100%" viewBox="0 0 200 300" class='hidden count-arrow'>
-                    <defs>
-                    <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
-                    <path d="M2,2 L2,11 L10,6 L2,2" style="fill: #000000;" />
-                    </marker>
-                    </defs>
-
-                    <line x1="200" y1="300" x2="15" y2="15" class="arrow" style='stroke:rgb(0,0,0); stroke-width:2; marker-end:url(#markerArrow)'/>
-                  </svg>
-                  <svg id='arrow-zero' height="350" width="100%" viewBox="0 0 200 300" class='hidden count-arrow'>
-                    <defs>
-                    <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
-                    <path d="M2,2 L2,11 L10,6 L2,2" style="fill: #000000;" />
-                    </marker>
-                    </defs>
-
-                    <line x1="200" y1="300" x2="15" y2="150" class="arrow" style='stroke:rgb(0,0,0); stroke-width:2; marker-end:url(#markerArrow)'/>
-                  </svg>
-                  <svg id='arrow-minus1' height="350" width="100%" viewBox="0 0 200 400" class='hidden count-arrow'>
-                    <defs>
-                    <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
-                    <path d="M2,2 L2,11 L10,6 L2,2" style="fill: #000000;" />
-                    </marker>
-                    </defs>
-
-                    <line x1="250" y1="300" x2="30" y2="400" class="arrow" style='stroke:rgb(0,0,0); stroke-width:2; marker-end:url(#markerArrow)'/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        </section> -->
 
         <section class='section viz2'>
             <div class="center2">
@@ -339,7 +186,7 @@
                 <div class="col2">
                     <svg id="vizarea"></svg>
                 </div>
-                <div class="col2" style="max-width: 400px;">
+                <div class="col2">
                     <div class="infotitle w-3/4 font-bold text-base pt-1">Strategy</div>
                     <form class="w-3/4">
                         <select class='w-full text-sm rounded' id = "dropdown">
@@ -377,15 +224,15 @@
                 <div class="col">
                     <div class="infotitle font-bold text-xl">Game Settings</div>
                     <h1 class='font-bold text-base text-lg'>General</h1>
-                    <div class="row flex flex-row flex-wrap items-center justify-center">
-                            <ul class = "terms w-1/2">
+                    <div class="row">
+                            <ul class = "terms w-1/2 text-[8px]">
                                 <li><b>Double on split - </b>Enabled</li>
                                 <li><b>Max splits - </b>3 splits</li>
                                 <li><b>Surrender - </b>Disabled</li>
                                 <li><b>Insurance - </b>Disabled</li>
                                 <li><b>Deck penetration - </b>5 decks</li>
                             </ul>
-                            <ul class = "terms w-1/2 text">
+                            <ul class = "terms w-1/2 text-[8px]">
                                 <li><b>Number of decks - </b>6 decks</li>
                                 <li><b>Insurance - </b>Disabled</li>
                                 <li><b>Hits after ace - </b>1 hit</li>
