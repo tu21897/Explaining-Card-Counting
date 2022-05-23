@@ -48,8 +48,10 @@
 
     async function vizgen(frame, text, button) {
         const margin = ({top:5, right:10, bottom:20, left:35, graph:5.8});
-        const width = 300;
-        const height = 450;
+        var clientWidth = document.getElementById('vizcont').clientWidth * .75;
+        var clientHeight= window.innerHeight * 450.0/667;
+        const width = clientWidth;
+        const height = clientHeight;
         const INF = new Intl.NumberFormat('en-US');
 
         const vizarea = d3.select('#vizarea')
@@ -195,18 +197,19 @@
             let colors = d3.scaleLinear()
                             .domain([49.5, 50.2])
                             .range(["red", "green"]);
-
+            
+            let fontSize = Math.min(75.0, width/7.03125);
             // Winrate
             vizarea.append('text')
                 .classed('rerender', true)
                 .data(data)
-                .attr('x', (width - margin.left) * 3 / 4 + 2)
-                .attr('y', margin.top + 40)
+                .attr('x', width - fontSize*2.5)
+                .attr('y', margin.top + fontSize)
                 .attr('fill', function(d){ return colors(d['Lifetime winrate (W/L x(Base))'])})
                 .attr('font-family', 'helvetica, arial')
                 .attr('font-weight', 'bold')
-                .attr('font-size', 40)
-                .text(data => data['Lifetime winrate (W/L x(Base))']);
+                .attr('font-size', fontSize)
+                .text(data => parseFloat(data['Lifetime winrate (W/L x(Base))']).toFixed(2));
         }
 
         return vizarea.node();

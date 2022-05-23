@@ -26,7 +26,7 @@
             fp.className = 'fp-left';
             ttn.style.left = null;
             ttn.style.right = '27px';
-            ttn.innerText = 'What is Blackjack?';
+            ttn.innerText = 'What is Blackjack & Card Counting?';
         };
         
         function hideshow2() {

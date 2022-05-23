@@ -59,7 +59,6 @@ a:hover {
 .center2 {
     padding-top: 12px;
     display: flex;
-    height: 100vh;
     flex-wrap: wrap;
     justify-content: top;
     flex-direction: column;

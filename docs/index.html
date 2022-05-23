@@ -41,22 +41,25 @@
             </div>
         </section>
 
-        <section class="section info active">
-            <div id="tooltipnav">What is Blackjack?</div>
+        <section class="section info">
+            <div id="tooltipnav">What is Blackjack & Card Counting?</div>
             <div class="slide" data-anchor="slide1">
                 <div class="center2">
-                    <h2 class="subtitle w-3/4 font-bold text-4xl p-7">Preface</h2>
+                    <h2 class="subtitle w-3/4 font-bold text-4xl p-4">Preface</h2>
                     <div class="col text-center">
                         <div class="infotitle font-bold text-xl text-red-700">Warning</div>
                         <div class='item font-bold text-red-700'>
                             <p>Gambling can be highly addictive and can have severe negative consequences. The following simulations & data do NOT account for real life scenarios and should not be used to model them.</p>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="infotitle font-bold text-xl">Ayaya</div>
-                        <div class='item'>
-                            <h1 class='font-bold text-base text-lg'>Ayaya</h1>
-                            <p>Ayaya</p>
+                        <div class="infotitle font-bold text-xl">About</div>
+                        <div class='item font-medium'>
+                            <p>With its blinding lights and endless entertainment, Las Vegas attracts millions of tourists yearly. And the main attraction? Casinos. Some lose it all, some make it out with riches. Nevertheless, the house <u>always</u> wins... <b>Or does it?</b></p>
+                        </div>
+                        <div class='item font-medium'>
+                            <p>Black Jack ranks at the top as the most popular game in casinos. While perfect basic strategy still loses long term, clever players have used basic probability to turn the odds into their favor. This is known as card counting.</p>
+                        </div>
+                        <div class='item font-medium'>
+                            <p></p>
                         </div>
                     </div>
                 </div>
@@ -181,28 +184,29 @@
             </div>
         </section>
 
-        <section class='section vis1'>
+        <!-- <section class='section vis1'>
             <div class="center">
                 <div class="card red spades">a</div>
                 <div class="card red hearts">10</div>
                 <div class='card black clubs'>8</div>
                 <div class='card back'></div>
             </div>
-        </section>
+        </section> -->
 
         <section class='section vis2'>
             <div class="center2">
+                <h3 class="subtitle h-7 text-center w-3/4 font-bold text-2xl">Win Rate Convergence</h3>
                 <div class="col2">
-                    <div class='w-full h-8 text-xl' id="simname"></div>
-                    <div class='w-full h-8 text-base' id="simcount"></div>
+                    <div class='w-full h-5 text-base' id="simname"></div>
+                    <div class='w-full h-5 text-base' id="simcount"></div>
                 </div>
-                <div class="col2">
+                <div id="vizcont" class="col2">
                     <svg id="vizarea"></svg>
                 </div>
                 <div class="col2">
                     <div class="infotitle w-3/4 font-bold text-base pt-1">Strategy</div>
                     <form class="w-3/4">
-                        <select class='w-full text-sm rounded' id = "dropdown">
+                        <select class='w-full text-sm rounded border' id = "dropdown">
                             <option>Basic Strategy</option>
                             <option>Hi-Lo Counting Strategy</option>
                             <option>Hi-Opt 1 Counting Strategy</option>
@@ -228,6 +232,12 @@
                         }
                     </style>
                 </div>
+                <div class="col">
+                    <div class='item pt-2'>
+                        <h1 class='font-bold text-base text-lg'>Insights</h1>
+                        <p>This animation shows the effect on win rate of each strategy over sessions played. Each session represents 1000 consecutive games of Black Jack. As the amount of sessions increases, we can see the life time win rate across all sessions converge.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -238,19 +248,19 @@
                     <div class="infotitle font-bold text-xl">Game Settings</div>
                     <h1 class='font-bold text-base text-lg'>General</h1>
                     <div class="row">
-                            <ul class = "terms w-1/2 text-[8px]">
-                                <li><b>Double on split - </b>Enabled</li>
-                                <li><b>Max splits - </b>3 splits</li>
+                            <ul class = "terms w-1/2 text-[12px]">
+                                <li><b>DAS - </b>Enabled</li>
+                                <li><b>Max splits - </b>3</li>
                                 <li><b>Surrender - </b>Disabled</li>
                                 <li><b>Insurance - </b>Disabled</li>
-                                <li><b>Deck penetration - </b>5 decks</li>
+                                <li><b>Deck penetration - </b>5</li>
                             </ul>
-                            <ul class = "terms w-1/2 text-[8px]">
-                                <li><b>Number of decks - </b>6 decks</li>
+                            <ul class = "terms w-1/2 text-[12px]">
+                                <li><b>Number of decks - </b>6</li>
                                 <li><b>Insurance - </b>Disabled</li>
-                                <li><b>Hits after ace - </b>1 hit</li>
-                                <li><b>Blackjack payout - </b>3:2 payout</li>
-                                <li><b>Games in session - </b>1000 games</li>
+                                <li><b>Hits after ace - </b>1</li>
+                                <li><b>Blackjack payout - </b>3:2</li>
+                                <li><b>Session games - </b>1000</li>
                             </ul>
                     </div>
                     <div class='item'>
@@ -275,7 +285,12 @@
                 </div>
                 <div class="col">
                     <div class="infotitle font-bold text-xl">Potential Errors & Tradeoffs</div>
-                    <div class='item'>
+                    <ul class="terms">
+                        <li><b>&diamondsuit; </b>Accounting For Multiple Players</li>
+                        <li><b>&diamondsuit; </b>Fixed Shuffling</li>
+                        <li><b>&diamondsuit; </b>Only Using Balanced Systems</li>
+                    </ul>
+                    <!-- <div class='item'>
                         <h1 class='font-bold text-base text-lg'>Accounting For Multiple Players</h1>
                         <p></p>
                     </div>
@@ -286,7 +301,7 @@
                     <div class='item'>
                         <h1 class='font-bold text-base text-lg'>Only Using Balanced Systems</h1>
                         <p></p>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </section>
